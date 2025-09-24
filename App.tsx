@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import type { Page } from './types';
 import BottomNav from './components/BottomNav';
@@ -27,8 +26,10 @@ const App: React.FC = () => {
 
   return (
     <div className="bg-gradient-to-b from-[#0f172a] via-[#0f172a] to-[#0c1322] text-slate-200 min-h-screen flex flex-col font-sans antialiased">
-      <main className="flex-grow p-6 overflow-y-auto">
-        {renderContent()}
+      <main className="flex-grow p-6 overflow-y-auto overflow-x-hidden">
+        <div key={activePage} className="page-enter-active">
+          {renderContent()}
+        </div>
       </main>
       <BottomNav activePage={activePage} setActivePage={setActivePage} />
     </div>

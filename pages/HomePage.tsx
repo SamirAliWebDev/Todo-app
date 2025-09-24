@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ListIcon, CheckIcon, ClockIcon } from '../components/Icons';
 
@@ -19,7 +18,7 @@ const HomePage: React.FC = () => {
   }).format(currentDate);
 
   return (
-    <div className="flex flex-col h-full text-center space-y-12 animate-fade-in">
+    <div className="flex flex-col h-full text-center space-y-12">
       <header>
         <h1 className="text-4xl md:text-5xl font-extrabold text-white text-glow">Welcome to Zenith</h1>
         <p className="text-slate-400 mt-2">{formattedDate}</p>

@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 
 const DateCarousel: React.FC = () => {
@@ -44,7 +43,7 @@ const DateCarousel: React.FC = () => {
 
 const TasksPage: React.FC = () => {
     return (
-        <div className="flex flex-col h-full animate-fade-in">
+        <div className="flex flex-col h-full">
             <header className="text-center mb-8">
                 <h1 className="text-5xl font-extrabold tracking-widest text-glow">TODO</h1>
             </header>

@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { GraphIcon } from '../components/Icons';
 
 const TrackerPage: React.FC = () => {
   return (
-    <div className="flex flex-col items-center text-center animate-fade-in pt-8">
+    <div className="flex flex-col items-center text-center pt-8">
       <h1 className="text-5xl font-extrabold text-white text-glow">Tracker</h1>
       <p className="text-slate-400 mt-2">Track your progress and productivity.</p>
 
