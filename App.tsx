@@ -24,12 +24,13 @@ const getExitAnimationClass = (page: Page) => {
   }
 };
 
+const getEnterDuration = (page: Page) => (page === 'Home' ? 500 : 300);
+const getExitDuration = (_page: Page) => 150;
+
 const App: React.FC = () => {
   const [activePage, setActivePage] = useState<Page>('Home');
   const [animationClass, setAnimationClass] = useState<string>(getEnterAnimationClass('Home'));
   const [isTransitioning, setIsTransitioning] = useState(false);
-
-  const getAnimationDuration = (page: Page) => (page === 'Home' ? 600 : 300);
 
   const onNavigate = (page: Page) => {
     if (page === activePage || isTransitioning) return;
@@ -37,8 +38,8 @@ const App: React.FC = () => {
     setIsTransitioning(true);
     setAnimationClass(getExitAnimationClass(activePage));
     
-    const exitDuration = getAnimationDuration(activePage);
-    const enterDuration = getAnimationDuration(page);
+    const exitDuration = getExitDuration(activePage);
+    const enterDuration = getEnterDuration(page);
 
     // Wait for the exit animation to finish
     setTimeout(() => {
@@ -69,7 +70,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="bg-gradient-to-b from-[#0f172a] via-[#0f172a] to-[#0c1322] text-slate-200 min-h-screen flex flex-col font-sans antialiased">
+    <div className="bg-gradient-to-b from-slate-50 to-slate-200 text-slate-800 min-h-screen flex flex-col font-sans antialiased">
       <main className="flex-grow relative overflow-hidden">
         <div
           key={activePage}

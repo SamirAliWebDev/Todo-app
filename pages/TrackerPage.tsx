@@ -4,12 +4,12 @@ import { GraphIcon } from '../components/Icons';
 const TrackerPage: React.FC = () => {
   return (
     <div className="flex flex-col items-center text-center pt-8">
-      <h1 className="text-5xl font-extrabold text-white text-glow">Tracker</h1>
-      <p className="text-slate-400 mt-2">Track your progress and productivity.</p>
+      <h1 className="text-5xl font-extrabold text-slate-900">Tracker</h1>
+      <p className="text-slate-500 mt-2">Track your progress and productivity.</p>
 
-      <div className="w-full max-w-md mt-12 bg-slate-800/60 backdrop-blur-md rounded-2xl p-8 border border-slate-700/50">
-        <h2 className="text-2xl font-bold text-white">Productivity Insights</h2>
-        <p className="text-slate-400 mt-3 mb-8">
+      <div className="w-full max-w-md mt-12 bg-white/60 backdrop-blur-md rounded-2xl p-8 border border-slate-200/50">
+        <h2 className="text-2xl font-bold text-slate-900">Productivity Insights</h2>
+        <p className="text-slate-500 mt-3 mb-8">
           Visualize your task completion trends, identify your most productive days, and track your progress over time.
         </p>
         
@@ -20,7 +20,7 @@ const TrackerPage: React.FC = () => {
           <GraphIcon />
           Generate Graph
         </button>
-        <p className="text-sm text-slate-500 mt-4">This feature is coming soon!</p>
+        <p className="text-sm text-slate-400 mt-4">This feature is coming soon!</p>
       </div>
     </div>
   );
