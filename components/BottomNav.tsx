@@ -1,11 +1,10 @@
-
 import React from 'react';
 import type { Page } from '../types';
 import { HomeIcon, TasksIcon, TrackerIcon, SettingsIcon, PlusIcon } from './Icons';
 
 interface BottomNavProps {
   activePage: Page;
-  setActivePage: (page: Page) => void;
+  onNavigate: (page: Page) => void;
 }
 
 const NavItem: React.FC<{
@@ -28,14 +27,14 @@ const NavItem: React.FC<{
 };
 
 
-const BottomNav: React.FC<BottomNavProps> = ({ activePage, setActivePage }) => {
+const BottomNav: React.FC<BottomNavProps> = ({ activePage, onNavigate }) => {
   return (
     <nav className="sticky bottom-0 bg-[#0f172a]/80 backdrop-blur-lg border-t border-slate-700/50 p-2">
       <div className="flex justify-around items-center h-16">
-        <NavItem page="Home" activePage={activePage} onClick={setActivePage} label="Home">
+        <NavItem page="Home" activePage={activePage} onClick={onNavigate} label="Home">
           <HomeIcon />
         </NavItem>
-        <NavItem page="Tasks" activePage={activePage} onClick={setActivePage} label="Tasks">
+        <NavItem page="Tasks" activePage={activePage} onClick={onNavigate} label="Tasks">
           <TasksIcon />
         </NavItem>
 
@@ -43,10 +42,10 @@ const BottomNav: React.FC<BottomNavProps> = ({ activePage, setActivePage }) => {
           <PlusIcon />
         </button>
 
-        <NavItem page="Tracker" activePage={activePage} onClick={setActivePage} label="Tracker">
+        <NavItem page="Tracker" activePage={activePage} onClick={onNavigate} label="Tracker">
           <TrackerIcon />
         </NavItem>
-        <NavItem page="Settings" activePage={activePage} onClick={setActivePage} label="Settings">
+        <NavItem page="Settings" activePage={activePage} onClick={onNavigate} label="Settings">
           <SettingsIcon />
         </NavItem>
       </div>

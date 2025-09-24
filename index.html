@@ -23,18 +23,51 @@
         -ms-overflow-style: none;
         scrollbar-width: none;
       }
+
+      /* Generic Enter Animation (Fade In) */
       @keyframes page-enter {
         0% {
           opacity: 0;
-          transform: translateY(1rem);
         }
         100% {
           opacity: 1;
-          transform: translateY(0);
         }
       }
       .page-enter-active {
-        animation: page-enter 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+        animation: page-enter 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+      }
+
+      /* Generic Exit Animation (Fade Out) */
+      @keyframes page-exit {
+        0% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+      .page-exit-active {
+        animation: page-exit 0.3s cubic-bezier(0.470, 0.000, 0.745, 0.715) both;
+      }
+
+      /* Circular Wipe Keyframes */
+      @keyframes grow-circle {
+        from { clip-path: circle(0%); }
+        to { clip-path: circle(150%); }
+      }
+      @keyframes shrink-circle {
+        from { clip-path: circle(150%); }
+        to { clip-path: circle(0%); }
+      }
+
+      /* Home page specific animation */
+      .page-home-enter-active {
+        animation: grow-circle 0.6s cubic-bezier(0.76, 0, 0.24, 1) both;
+        clip-path: circle(0% at 15% 95%);
+      }
+      .page-home-exit-active {
+        animation: shrink-circle 0.6s cubic-bezier(0.76, 0, 0.24, 1) both;
+        clip-path: circle(150% at 15% 95%);
       }
     </style>
   <script type="importmap">
