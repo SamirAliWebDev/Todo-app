@@ -83,7 +83,7 @@
         content: '';
         position: absolute;
         inset: 0;
-        background-color: #2563eb; /* Tailwind blue-600 */
+        background-color: #06b6d4; /* Tailwind cyan-500 */
         z-index: 1; /* Sit on top of the content */
       }
 
@@ -96,6 +96,8 @@
       .page-home-enter-active > * {
         opacity: 0;
         animation: fade-in-content 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) 0.2s forwards;
+        position: relative; /* Establish stacking context for content */
+        z-index: 2; /* Place content above the blue overlay */
       }
 
       /* Slide Up/Down Keyframes for Add Page */

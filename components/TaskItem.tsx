@@ -38,34 +38,36 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onToggle, onDelete, index }) 
         aria-label={task.completed ? `Mark "${task.title}" as incomplete` : `Mark "${task.title}" as complete`}
         className={`
           absolute left-4 top-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full 
-          ring-4 ring-slate-100 flex items-center justify-center transition-colors duration-200
-          ${task.completed ? 'bg-blue-600' : priorityStyles[task.priority]}
+          ring-4 ring-slate-800 flex items-center justify-center transition-colors duration-200 z-10
+          ${task.completed ? 'bg-cyan-500' : priorityStyles[task.priority]}
         `}
       >
         {task.completed && <SmallCheckIcon />}
       </button>
 
-      {/* Task Content */}
+      {/* Task Content Card */}
       <div
         className={`
-            w-full py-2
-            flex items-center justify-between transition-opacity duration-300
-            ${task.completed ? 'opacity-60' : ''}
+            w-full p-4 pr-12
+            flex items-center justify-between transition-all duration-300
+            bg-slate-800/40 backdrop-blur-md rounded-xl border border-white/10
+            group-hover:shadow-lg group-hover:bg-slate-700/50 group-hover:border-white/20
+            ${task.completed ? 'opacity-50' : ''}
         `}
       >
         <div
           className="flex-1 min-w-0 cursor-pointer"
           onClick={() => onToggle(task.id)}
         >
-          <p id={`task-title-${task.id}`} className={`font-semibold text-slate-800 truncate ${task.completed ? 'line-through text-slate-500' : ''}`}>
+          <p id={`task-title-${task.id}`} className={`font-semibold text-white truncate ${task.completed ? 'line-through text-slate-400' : ''}`}>
             {task.title}
           </p>
-          {task.description && <p className="text-sm text-slate-500 truncate">{task.description}</p>}
+          {task.description && <p className="text-sm text-slate-400 truncate">{task.description}</p>}
         </div>
         <button
           onClick={handleDelete}
           aria-label={`Delete task: ${task.title}`}
-          className="ml-4 opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-red-500 flex-shrink-0"
+          className="absolute right-4 top-1/2 -translate-y-1/2 ml-4 opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-red-500 flex-shrink-0"
         >
           <TrashIcon />
         </button>

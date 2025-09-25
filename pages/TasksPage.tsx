@@ -41,8 +41,8 @@ const DateCarousel: React.FC<DateCarouselProps> = ({ selectedDate, onDateSelect 
                             flex-shrink-0 w-16 h-20 rounded-xl p-2 flex flex-col items-center justify-center transition-all duration-300
                             date-item-animate
                             ${isSelected
-                                ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/40'
-                                : 'bg-white/60 hover:bg-slate-200/80 text-slate-600 border border-slate-200/50'
+                                ? 'bg-cyan-500 text-white shadow-lg shadow-cyan-500/30'
+                                : 'bg-slate-800/40 backdrop-blur-md hover:bg-slate-700/60 text-slate-300 border border-white/10 shadow-md shadow-black/20'
                             }
                         `}
                         style={{ animationDelay: `${index * 50}ms` }}
@@ -79,7 +79,7 @@ const TasksPage: React.FC<TasksPageProps> = ({ tasks, onToggleTask, onDeleteTask
     return (
         <div className="flex flex-col h-full">
             <header className="text-center mb-8">
-                <h1 className="text-5xl font-extrabold tracking-widest">TODO</h1>
+                <h1 className="text-5xl font-extrabold tracking-widest text-white">TODO</h1>
             </header>
             <DateCarousel selectedDate={selectedDate} onDateSelect={onDateSelect} />
             <div className="flex-grow mt-8">
@@ -92,7 +92,7 @@ const TasksPage: React.FC<TasksPageProps> = ({ tasks, onToggleTask, onDeleteTask
                 ) : (
                     <div className="relative">
                         {/* Vertical timeline line */}
-                        <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-slate-300 -translate-x-1/2 timeline-line-animate"></div>
+                        <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-slate-600 -translate-x-1/2 timeline-line-animate"></div>
                         <ul className="space-y-6">
                             {filteredTasks.map((task, index) => (
                                 <TaskItem 

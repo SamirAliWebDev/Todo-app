@@ -40,13 +40,13 @@ const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAdd
   return (
     <div className="flex flex-col h-full">
       <header className="flex items-center justify-between mb-8">
-        <h1 className="text-4xl font-extrabold text-slate-900">Add New Task</h1>
+        <h1 className="text-4xl font-extrabold text-white">Add New Task</h1>
         <button 
           onClick={() => onNavigate('Home')} 
-          className="text-slate-500 hover:text-slate-900 transition-colors"
+          className="text-slate-400 hover:text-white transition-colors"
           aria-label="Close"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
@@ -54,7 +54,7 @@ const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAdd
       
       <form onSubmit={handleSubmit} className="flex-grow flex flex-col space-y-6">
         <div>
-          <label htmlFor="task-title" className="block text-sm font-medium text-slate-700 mb-1">
+          <label htmlFor="task-title" className="block text-sm font-medium text-slate-300 mb-1">
             Task Title
           </label>
           <input
@@ -63,13 +63,13 @@ const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAdd
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="e.g., Finish project report"
-            className="w-full px-4 py-3 bg-white/60 border border-slate-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition"
+            className="w-full px-4 py-3 bg-slate-800/40 text-white backdrop-blur-sm border border-slate-600 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 transition placeholder:text-slate-400"
             required
           />
         </div>
         
         <div>
-          <label htmlFor="task-description" className="block text-sm font-medium text-slate-700 mb-1">
+          <label htmlFor="task-description" className="block text-sm font-medium text-slate-300 mb-1">
             Description (Optional)
           </label>
           <textarea
@@ -78,20 +78,20 @@ const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAdd
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Add more details about your task..."
-            className="w-full px-4 py-3 bg-white/60 border border-slate-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition"
+            className="w-full px-4 py-3 bg-slate-800/40 text-white backdrop-blur-sm border border-slate-600 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 transition placeholder:text-slate-400"
           ></textarea>
         </div>
 
         <div className="flex space-x-4">
             <div className="flex-1">
-                <label htmlFor="task-priority" className="block text-sm font-medium text-slate-700 mb-1">
+                <label htmlFor="task-priority" className="block text-sm font-medium text-slate-300 mb-1">
                     Priority
                 </label>
                 <select 
                     id="task-priority"
                     value={priority}
                     onChange={(e) => setPriority(e.target.value as Priority)}
-                    className="w-full px-4 py-3 bg-white/60 border border-slate-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition appearance-none"
+                    className="w-full px-4 py-3 bg-slate-800/40 text-white backdrop-blur-sm border border-slate-600 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 transition appearance-none"
                 >
                         <option>Low</option>
                         <option>Medium</option>
@@ -99,7 +99,7 @@ const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAdd
                 </select>
             </div>
             <div className="flex-1">
-                <label htmlFor="task-date" className="block text-sm font-medium text-slate-700 mb-1">
+                <label htmlFor="task-date" className="block text-sm font-medium text-slate-300 mb-1">
                     Date
                 </label>
                 <input
@@ -107,7 +107,7 @@ const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAdd
                     id="task-date"
                     value={taskDate}
                     onChange={(e) => setTaskDate(e.target.value)}
-                    className="w-full px-4 py-3 bg-white/60 border border-slate-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition"
+                    className="w-full px-4 py-3 bg-slate-800/40 text-white backdrop-blur-sm border border-slate-600 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 transition"
                     required
                 />
             </div>
@@ -116,7 +116,7 @@ const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAdd
         <div className="mt-auto pt-4">
           <button 
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-4 rounded-lg transition-colors shadow-lg shadow-blue-500/30"
+            className="w-full bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-4 px-4 rounded-lg transition-colors shadow-lg shadow-cyan-500/30"
           >
             Create Task
           </button>

@@ -83,7 +83,7 @@ export const BarChart: React.FC<{ data: ChartDataItem[] }> = ({ data }) => {
                                 x2={chartWidth + yAxisWidth}
                                 y1={y}
                                 y2={y}
-                                stroke="#cbd5e1" // slate-300
+                                stroke="#475569" // slate-600
                                 strokeWidth="1"
                             />
                             <text
@@ -91,7 +91,7 @@ export const BarChart: React.FC<{ data: ChartDataItem[] }> = ({ data }) => {
                                 y={y + 3} // slight vertical adjustment
                                 textAnchor="end"
                                 fontSize="10"
-                                fill="#64748b" // slate-500
+                                fill="#94a3b8" // slate-400
                             >
                                 {value}
                             </text>
@@ -113,7 +113,7 @@ export const BarChart: React.FC<{ data: ChartDataItem[] }> = ({ data }) => {
                             fill={item.color}
                             rx="4"
                         />
-                        <text x={barWidth / 2} y={chartHeight - 4} textAnchor="middle" fontSize="10" fill="#64748b">{item.label}</text>
+                        <text x={barWidth / 2} y={chartHeight - 4} textAnchor="middle" fontSize="10" fill="#94a3b8">{item.label}</text>
                     </g>
                 );
             })}
@@ -154,7 +154,7 @@ export const LineChart: React.FC<{ data: ChartDataItem[] }> = ({ data }) => {
                                 x2={chartWidth - padding.right}
                                 y1={y}
                                 y2={y}
-                                stroke="#cbd5e1" // slate-300
+                                stroke="#475569" // slate-600
                                 strokeWidth="1"
                             />
                             <text
@@ -162,7 +162,7 @@ export const LineChart: React.FC<{ data: ChartDataItem[] }> = ({ data }) => {
                                 y={y + 3} // slight vertical adjustment
                                 textAnchor="end"
                                 fontSize="10"
-                                fill="#64748b" // slate-500
+                                fill="#94a3b8" // slate-400
                             >
                                 {value}
                             </text>
@@ -173,7 +173,7 @@ export const LineChart: React.FC<{ data: ChartDataItem[] }> = ({ data }) => {
             {canDrawLine && (
                  <polyline
                     fill="none"
-                    stroke="#3b82f6"
+                    stroke="#06b6d4"
                     strokeWidth="3"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -190,11 +190,11 @@ export const LineChart: React.FC<{ data: ChartDataItem[] }> = ({ data }) => {
                             cx={x} 
                             cy={y} 
                             r="5" 
-                            fill="#fff" 
-                            stroke="#3b82f6" 
+                            fill="#1e293b" // slate-800
+                            stroke="#06b6d4" 
                             strokeWidth="2" 
                         />
-                        <text x={x} y={chartHeight - padding.bottom + 15} textAnchor="middle" fontSize="10" fill="#64748b">{item.label}</text>
+                        <text x={x} y={chartHeight - padding.bottom + 15} textAnchor="middle" fontSize="10" fill="#94a3b8">{item.label}</text>
                     </g>
                 );
             })}
@@ -237,8 +237,8 @@ export const PieChart: React.FC<{ data: ChartDataItem[] }> = ({ data }) => {
                 {data.map(item => (
                     <div key={item.label} className="flex items-center text-sm">
                         <span className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: item.color }}></span>
-                        <span className="text-slate-700 font-medium">{item.label}</span>
-                        <span className="ml-auto text-slate-500">{total > 0 ? Math.round((item.value / total) * 100) : 0}%</span>
+                        <span className="text-slate-200 font-medium">{item.label}</span>
+                        <span className="ml-auto text-slate-400">{total > 0 ? Math.round((item.value / total) * 100) : 0}%</span>
                     </div>
                 ))}
             </div>

@@ -86,7 +86,7 @@ const GraphViewModal: React.FC<{
             return {
                 label,
                 value: completedTasksPerDay.get(dateString) || 0,
-                color: '#3b82f6',
+                color: '#06b6d4',
             };
         });
       }
@@ -125,7 +125,7 @@ const GraphViewModal: React.FC<{
   
   const renderChart = () => {
     if (!chartData || chartData.length === 0 || chartData.every(d => d.value === 0)) {
-        return <p className="text-slate-500 text-center py-10">No data available for this analysis.</p>;
+        return <p className="text-slate-400 text-center py-10">No data available for this analysis.</p>;
     }
     
     switch (config.type) {
@@ -145,14 +145,14 @@ const GraphViewModal: React.FC<{
       aria-labelledby="graph-modal-title"
     >
       <div
-        className="modal-content w-full max-w-lg bg-slate-50 rounded-2xl shadow-xl p-6"
+        className="modal-content w-full max-w-lg bg-slate-800 border border-slate-700 rounded-2xl shadow-xl p-6"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center mb-4">
-            <h3 id="graph-modal-title" className="text-xl font-bold text-slate-800">{analysisTitle}</h3>
+            <h3 id="graph-modal-title" className="text-xl font-bold text-white">{analysisTitle}</h3>
             <button 
                 onClick={handleClose} 
-                className="text-slate-400 hover:text-slate-600 transition-colors"
+                className="text-slate-400 hover:text-white transition-colors"
                 aria-label="Close"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24" stroke="currentColor" strokeWidth={2}>
@@ -163,8 +163,8 @@ const GraphViewModal: React.FC<{
          {config.analysis === 'Streak' ? (
             <div className="flex flex-col items-center justify-center p-4">
                 <StreakIcon className="h-12 w-12 text-yellow-500" />
-                <span className="text-6xl font-extrabold text-slate-900 mt-2">{productivityStreak}</span>
-                <span className="text-lg text-slate-500 font-medium">Day Streak</span>
+                <span className="text-6xl font-extrabold text-white mt-2">{productivityStreak}</span>
+                <span className="text-lg text-slate-300 font-medium">Day Streak</span>
             </div>
         ) : (
             <div className="h-64 flex items-center justify-center">
@@ -191,14 +191,14 @@ const GraphOptionsModal: React.FC<{
       onClick={onClose}
     >
       <div
-        className="modal-content w-full max-w-sm bg-slate-50 rounded-2xl shadow-xl p-6"
+        className="modal-content w-full max-w-sm bg-slate-800 border border-slate-700 rounded-2xl shadow-xl p-6"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-bold text-slate-800">{title}</h3>
+            <h3 className="text-xl font-bold text-white">{title}</h3>
             <button 
                 onClick={onClose} 
-                className="text-slate-400 hover:text-slate-600 transition-colors"
+                className="text-slate-400 hover:text-white transition-colors"
                 aria-label="Close"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24" stroke="currentColor" strokeWidth={2}>
@@ -212,7 +212,7 @@ const GraphOptionsModal: React.FC<{
                 <button
                   key={id}
                   onClick={() => onSelectAnalysis(id)}
-                  className="w-full text-left p-4 rounded-lg font-semibold transition-colors duration-200 bg-white/60 text-slate-700 border border-slate-200 hover:bg-blue-100 hover:border-blue-300 hover:text-blue-700"
+                  className="w-full text-left p-4 rounded-lg font-semibold transition-colors duration-200 bg-slate-700 text-slate-200 border border-slate-600 hover:bg-cyan-500/20 hover:border-cyan-500/50 hover:text-cyan-400"
                 >
                   {label}
                 </button>
@@ -222,7 +222,7 @@ const GraphOptionsModal: React.FC<{
                 <button
                     key={id}
                     onClick={() => onSelectGraphType(id)}
-                    className="w-full flex items-center p-4 rounded-lg font-semibold transition-colors duration-200 bg-white/60 text-slate-700 border border-slate-200 hover:bg-blue-100 hover:border-blue-300 hover:text-blue-700"
+                    className="w-full flex items-center p-4 rounded-lg font-semibold transition-colors duration-200 bg-slate-700 text-slate-200 border border-slate-600 hover:bg-cyan-500/20 hover:border-cyan-500/50 hover:text-cyan-400"
                 >
                     {icon}
                     {label}
@@ -273,18 +273,18 @@ const TrackerPage: React.FC<TrackerPageProps> = ({ tasks, generatedGraph, onGene
   return (
     <>
       <div className="flex flex-col items-center text-center pt-8">
-        <h1 className="text-5xl font-extrabold text-slate-900">Tracker</h1>
-        <p className="text-slate-500 mt-2">Track your progress and productivity.</p>
+        <h1 className="text-5xl font-extrabold text-white">Tracker</h1>
+        <p className="text-slate-400 mt-2">Track your progress and productivity.</p>
 
         <div className="w-full max-w-md">
-            <div className="w-full mt-12 bg-white/60 backdrop-blur-md rounded-2xl p-8 border border-slate-200/50 content-fade-in-active">
-                <h2 className="text-2xl font-bold text-slate-900">Productivity Insights</h2>
-                <p className="text-slate-500 mt-3 mb-6">
+            <div className="w-full mt-12 bg-slate-800/40 backdrop-blur-md rounded-2xl p-8 border border-white/10 shadow-xl shadow-black/25 content-fade-in-active">
+                <h2 className="text-2xl font-bold text-white">Productivity Insights</h2>
+                <p className="text-slate-300 mt-3 mb-6">
                     Generate a graph to visualize your task trends and track your progress over time.
                 </p>
                 <button
                     onClick={openModal}
-                    className="w-full flex items-center justify-center bg-gradient-to-br from-blue-600 to-blue-800 text-white font-bold py-3 px-4 rounded-lg shadow-lg shadow-blue-500/30 transition-none active:scale-100"
+                    className="w-full flex items-center justify-center bg-gradient-to-br from-cyan-500 to-cyan-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg shadow-cyan-500/30 transition-none active:scale-100"
                 >
                     <GraphIcon />
                     Generate Graph

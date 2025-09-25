@@ -145,7 +145,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="bg-gradient-to-b from-slate-50 to-slate-200 text-slate-800 min-h-screen flex flex-col font-sans antialiased">
+    <div className="bg-gradient-to-b from-slate-900 to-slate-800 text-slate-300 min-h-screen flex flex-col font-sans antialiased">
       <main className="flex-grow relative overflow-hidden">
         <div
           key={activePage}
