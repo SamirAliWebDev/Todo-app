@@ -76,9 +76,41 @@ const TasksPage: React.FC<TasksPageProps> = ({ tasks, onToggleTask, onDeleteTask
         return isSameDay(today, selectedDate);
     }, [selectedDate]);
 
+    const headerInfo = useMemo(() => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+
+        // Ensure selectedDate is also normalized to the start of the day for accurate comparison
+        const selected = new Date(selectedDate);
+        selected.setHours(0, 0, 0, 0);
+
+        let dayName = '';
+        if (selected.getTime() === today.getTime()) {
+            dayName = "Today";
+        } else if (selected.getTime() === tomorrow.getTime()) {
+            dayName = "Tomorrow";
+        } else {
+            dayName = selected.toLocaleDateString('en-US', { weekday: 'long' });
+        }
+        
+        const fullDate = selected.toLocaleDateString('en-US', {
+            month: 'long',
+            day: 'numeric',
+        });
+
+        return { dayName, fullDate };
+    }, [selectedDate]);
+
     return (
         <div className="flex flex-col h-full">
             <div className="bg-slate-800/40 backdrop-blur-md rounded-b-2xl px-6 pt-8 pb-4 border-b border-white/10 shadow-lg shadow-black/20">
+                <div className="mb-6 text-center">
+                    <h1 className="text-3xl font-extrabold text-white">{headerInfo.dayName}</h1>
+                    <p className="text-slate-400">{headerInfo.fullDate}</p>
+                </div>
                 <DateCarousel selectedDate={selectedDate} onDateSelect={onDateSelect} />
             </div>
             <div className="flex-grow p-6">
