@@ -1,4 +1,6 @@
 import React, { useState, useMemo } from 'react';
+import type { Task } from '../types';
+import TaskItem from '../components/TaskItem';
 
 const DateCarousel: React.FC = () => {
     const today = new Date();
@@ -40,16 +42,41 @@ const DateCarousel: React.FC = () => {
     );
 };
 
+interface TasksPageProps {
+    tasks: Task[];
+    onToggleTask: (taskId: string) => void;
+    onDeleteTask: (taskId: string) => void;
+}
 
-const TasksPage: React.FC = () => {
+const TasksPage: React.FC<TasksPageProps> = ({ tasks, onToggleTask, onDeleteTask }) => {
     return (
         <div className="flex flex-col h-full">
             <header className="text-center mb-8">
                 <h1 className="text-5xl font-extrabold tracking-widest">TODO</h1>
             </header>
             <DateCarousel />
-            <div className="flex-grow flex items-center justify-center mt-8">
-                 <p className="text-slate-400">No tasks for today. Add one!</p>
+            <div className="flex-grow mt-8">
+                {tasks.length === 0 ? (
+                     <div className="flex items-center justify-center h-full">
+                        <p className="text-slate-400">No tasks for today. Add one!</p>
+                    </div>
+                ) : (
+                    <div className="relative">
+                        {/* Vertical timeline line */}
+                        <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-slate-300 -translate-x-1/2 timeline-line-animate"></div>
+                        <ul className="space-y-6">
+                            {tasks.map((task, index) => (
+                                <TaskItem 
+                                    key={task.id} 
+                                    task={task} 
+                                    onToggle={onToggleTask} 
+                                    onDelete={onDeleteTask}
+                                    index={index}
+                                />
+                            ))}
+                        </ul>
+                    </div>
+                )}
             </div>
         </div>
     );

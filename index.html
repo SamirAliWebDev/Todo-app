@@ -97,6 +97,75 @@
         opacity: 0;
         animation: fade-in-content 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) 0.2s forwards;
       }
+
+      /* Slide Up/Down Keyframes for Add Page */
+      @keyframes slide-in-up {
+        from { transform: translateY(100%); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+      .page-add-enter-active {
+        animation: slide-in-up 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+      }
+
+      @keyframes slide-out-down {
+        from { transform: translateY(0); opacity: 1; }
+        to { transform: translateY(100%); opacity: 0; }
+      }
+      .page-add-exit-active {
+        animation: slide-out-down 0.3s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
+      }
+
+      /* Animation for the timeline line */
+      @keyframes grow-line {
+        from {
+          transform: scaleY(0);
+        }
+        to {
+          transform: scaleY(1);
+        }
+      }
+      .timeline-line-animate {
+        transform-origin: top;
+        animation: grow-line 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+      }
+
+      /* Animation for each task item */
+      @keyframes fade-in-slide-up {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .task-item-animate {
+        opacity: 0; /* Start hidden */
+        animation: fade-in-slide-up 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+      }
+
+      /* Animation for task item deletion */
+      @keyframes fade-out-shrink {
+        from {
+          opacity: 1;
+          transform: scaleY(1);
+          max-height: 100px; /* Should be larger than any task item */
+        }
+        to {
+          opacity: 0;
+          transform: scaleY(0);
+          max-height: 0;
+          padding-top: 0;
+          padding-bottom: 0;
+          margin-bottom: -1.5rem; /* Compensate for parent's space-y-6 to pull next item up */
+        }
+      }
+      .task-item-exit-active {
+        transform-origin: top;
+        animation: fade-out-shrink 0.3s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
+        overflow: hidden;
+      }
     </style>
   <script type="importmap">
 {

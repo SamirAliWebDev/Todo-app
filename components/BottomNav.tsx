@@ -38,7 +38,11 @@ const BottomNav: React.FC<BottomNavProps> = ({ activePage, onNavigate }) => {
           <TasksIcon />
         </NavItem>
 
-        <button className="bg-blue-600 hover:bg-blue-500 rounded-full w-16 h-16 flex items-center justify-center -mt-8 shadow-lg shadow-blue-600/30 ring-4 ring-slate-100">
+        <button 
+          onClick={() => onNavigate('Add')}
+          aria-label="Add new task"
+          className="bg-blue-600 hover:bg-blue-500 rounded-full w-16 h-16 flex items-center justify-center -mt-8 shadow-lg shadow-blue-600/30 ring-4 ring-slate-100"
+        >
           <PlusIcon />
         </button>
 
