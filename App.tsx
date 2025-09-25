@@ -159,7 +159,7 @@ const App: React.FC = () => {
       <main className="flex-grow relative overflow-hidden">
         <div
           key={activePage}
-          className={`w-full h-full p-6 absolute inset-0 overflow-y-auto scrollbar-hide ${animationClass}`}
+          className={`w-full h-full absolute inset-0 overflow-y-auto scrollbar-hide ${animationClass}`}
         >
           {renderPage(activePage)}
         </div>

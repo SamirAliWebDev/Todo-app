@@ -27,7 +27,7 @@ const DateCarousel: React.FC<DateCarouselProps> = ({ selectedDate, onDateSelect 
     }, []);
 
     return (
-        <div className="flex space-x-3 overflow-x-auto pb-4 scrollbar-hide">
+        <div className="flex space-x-3 overflow-x-auto scrollbar-hide">
             {dates.map((date, index) => {
                 const day = date.toLocaleString('en-US', { weekday: 'short' }).toUpperCase();
                 const dayOfMonth = date.getDate();
@@ -78,11 +78,10 @@ const TasksPage: React.FC<TasksPageProps> = ({ tasks, onToggleTask, onDeleteTask
 
     return (
         <div className="flex flex-col h-full">
-            <header className="text-center mb-8">
-                <h1 className="text-5xl font-extrabold tracking-widest text-white">TODO</h1>
-            </header>
-            <DateCarousel selectedDate={selectedDate} onDateSelect={onDateSelect} />
-            <div className="flex-grow mt-8">
+            <div className="bg-slate-800/40 backdrop-blur-md rounded-b-2xl px-6 pt-8 pb-4 border-b border-white/10 shadow-lg shadow-black/20">
+                <DateCarousel selectedDate={selectedDate} onDateSelect={onDateSelect} />
+            </div>
+            <div className="flex-grow p-6">
                 {filteredTasks.length === 0 ? (
                      <div className="flex items-center justify-center h-full">
                         <p className="text-slate-400">

@@ -262,7 +262,7 @@ const TrackerPage: React.FC<TrackerPageProps> = ({ tasks, generatedGraphs, onGen
 
   return (
     <>
-      <div className="flex flex-col items-center text-center pt-8">
+      <div className="flex flex-col items-center text-center pt-8 p-6">
         <h1 className="text-5xl font-extrabold text-white">Tracker</h1>
         <p className="text-slate-400 mt-2">Track your progress and productivity.</p>
 

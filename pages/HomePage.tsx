@@ -44,7 +44,7 @@ const HomePage: React.FC<HomePageProps> = ({ tasks }) => {
   const greeting = getGreeting();
 
   return (
-    <div className="flex flex-col h-full text-center space-y-12">
+    <div className="p-6 flex flex-col h-full text-center space-y-12">
       <header className="content-fade-in-active" style={{ animationDelay: '100ms' }}>
         <p className="text-xl font-semibold text-cyan-400">{greeting}</p>
         <h1 className="text-4xl md:text-5xl font-extrabold text-white mt-1">Welcome to Zenith</h1>

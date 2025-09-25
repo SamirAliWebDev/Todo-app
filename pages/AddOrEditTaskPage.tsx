@@ -38,7 +38,7 @@ const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAdd
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full p-6">
       <header className="flex items-center justify-between mb-8">
         <h1 className="text-4xl font-extrabold text-white">Add New Task</h1>
         <button 
