@@ -8,5 +8,12 @@ export interface Task {
   description?: string;
   priority: Priority;
   completed: boolean;
-  createdAt: Date;
+  date: Date;
+}
+
+export type GraphOption = 'Completion' | 'Priority' | 'PerDay' | 'Streak';
+export type GraphType = 'Bar' | 'Line' | 'Pie';
+export interface GraphConfig {
+  analysis: GraphOption;
+  type: GraphType;
 }

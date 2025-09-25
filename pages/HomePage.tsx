@@ -10,6 +10,14 @@ const StatCard: React.FC<{ icon: React.ReactNode; label: string; count: number }
   </div>
 );
 
+const isSameDay = (d1: Date, d2: Date) => {
+    if (!d1 || !d2) return false;
+    return d1.getFullYear() === d2.getFullYear() &&
+           d1.getMonth() === d2.getMonth() &&
+           d1.getDate() === d2.getDate();
+};
+
+
 interface HomePageProps {
   tasks: Task[];
 }
@@ -21,9 +29,11 @@ const HomePage: React.FC<HomePageProps> = ({ tasks }) => {
     month: 'long',
     day: 'numeric',
   }).format(currentDate);
+  
+  const todaysTasks = tasks.filter(task => isSameDay(task.date, currentDate));
 
-  const totalTasks = tasks.length;
-  const completedTasks = tasks.filter(task => task.completed).length;
+  const totalTasks = todaysTasks.length;
+  const completedTasks = todaysTasks.filter(task => task.completed).length;
   const pendingTasks = totalTasks - completedTasks;
 
   return (

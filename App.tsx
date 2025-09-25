@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import type { Page, Task } from './types';
+import React, { useState, useEffect } from 'react';
+import type { Page, Task, GraphConfig } from './types';
 import BottomNav from './components/BottomNav';
 import HomePage from './pages/HomePage';
 import TasksPage from './pages/TasksPage';
@@ -45,9 +45,52 @@ const getExitDuration = (page: Page) => {
 
 const App: React.FC = () => {
   const [activePage, setActivePage] = useState<Page>('Home');
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<Task[]>(() => {
+    try {
+      const savedTasks = localStorage.getItem('tasks');
+      if (savedTasks) {
+        const parsedTasks = JSON.parse(savedTasks);
+        // Ensure date strings are converted back to Date objects
+        return parsedTasks.map((task: Omit<Task, 'date'> & { date: string }) => ({
+          ...task,
+          date: new Date(task.date),
+        }));
+      }
+      return [];
+    } catch (error) {
+      console.error('Failed to load tasks from localStorage', error);
+      return [];
+    }
+  });
+  
+  useEffect(() => {
+    try {
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+    } catch (error) {
+      console.error('Failed to save tasks to localStorage', error);
+    }
+  }, [tasks]);
+
   const [animationClass, setAnimationClass] = useState<string>(getEnterAnimationClass('Home'));
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return today;
+  });
+  const [generatedGraph, setGeneratedGraph] = useState<GraphConfig | null>(null);
+  const [animateGraph, setAnimateGraph] = useState(false);
+
+  const handleAnimationDone = () => {
+    setAnimateGraph(false);
+  };
+
+  const handleGenerateGraph = (config: GraphConfig | null) => {
+    if (config && JSON.stringify(config) !== JSON.stringify(generatedGraph)) {
+      setAnimateGraph(true);
+    }
+    setGeneratedGraph(config);
+  };
 
   const onNavigate = (page: Page) => {
     if (page === activePage || isTransitioning) return;
@@ -71,14 +114,13 @@ const App: React.FC = () => {
     }, exitDuration);
   };
 
-  const handleAddTask = (task: Omit<Task, 'id' | 'completed' | 'createdAt'>) => {
+  const handleAddTask = (task: Omit<Task, 'id' | 'completed'>) => {
     const newTask: Task = {
       ...task,
       id: Date.now().toString(),
       completed: false,
-      createdAt: new Date(),
     };
-    setTasks(prevTasks => [...prevTasks, newTask].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()));
+    setTasks(prevTasks => [...prevTasks, newTask].sort((a, b) => Number(a.id) - Number(b.id)));
   };
 
   const handleToggleTask = (taskId: string) => {
@@ -98,11 +140,11 @@ const App: React.FC = () => {
       case 'Home':
         return <HomePage tasks={tasks} />;
       case 'Tasks':
-        return <TasksPage tasks={tasks} onToggleTask={handleToggleTask} onDeleteTask={handleDeleteTask} />;
+        return <TasksPage tasks={tasks} onToggleTask={handleToggleTask} onDeleteTask={handleDeleteTask} selectedDate={selectedDate} onDateSelect={setSelectedDate} />;
       case 'Add':
-        return <AddOrEditTaskPage onNavigate={onNavigate} onAddTask={handleAddTask} />;
+        return <AddOrEditTaskPage onNavigate={onNavigate} onAddTask={handleAddTask} selectedDate={selectedDate} />;
       case 'Tracker':
-        return <TrackerPage />;
+        return <TrackerPage tasks={tasks} generatedGraph={generatedGraph} onGenerateGraph={handleGenerateGraph} animateGraph={animateGraph} onAnimationDone={handleAnimationDone} />;
       case 'Settings':
         return <SettingsPage />;
       default:
