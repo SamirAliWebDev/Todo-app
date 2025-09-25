@@ -22,30 +22,26 @@ interface TrackerPageProps {
   tasks: Task[];
   generatedGraph: GraphConfig | null;
   onGenerateGraph: (config: GraphConfig | null) => void;
-  animateGraph: boolean;
-  onAnimationDone: () => void;
 }
 
-interface GraphDisplayProps {
-    tasks: Task[];
-    config: GraphConfig;
-    onClear: () => void;
-    animate: boolean;
-    onAnimationDone: () => void;
-}
-
-const GraphDisplay: React.FC<GraphDisplayProps> = ({ tasks, config, onClear, animate, onAnimationDone }) => {
-  const analysisTitle = analysisOptions.find(opt => opt.id === config.analysis)?.label || '';
+const GraphViewModal: React.FC<{
+  tasks: Task[];
+  config: GraphConfig;
+  onClose: () => void;
+}> = ({ tasks, config, onClose }) => {
+  const [animationClass, setAnimationClass] = useState('');
 
   useEffect(() => {
-    if (animate) {
-        const timer = setTimeout(() => {
-            onAnimationDone();
-        }, 1200); // Should be longer than the longest chart animation
-        return () => clearTimeout(timer);
-    }
-  }, [animate, onAnimationDone]);
+    setTimeout(() => setAnimationClass('modal-enter'), 10);
+  }, []);
 
+  const handleClose = () => {
+    setAnimationClass('modal-exit');
+    setTimeout(onClose, 200); // Wait for animation
+  };
+
+  const analysisTitle = analysisOptions.find(opt => opt.id === config.analysis)?.label || '';
+  
   const chartData = useMemo(() => {
     if (!tasks.length) return [];
 
@@ -71,7 +67,6 @@ const GraphDisplay: React.FC<GraphDisplayProps> = ({ tasks, config, onClear, ani
           .filter(task => task.completed)
           .reduce((acc, task) => {
             const taskDate = new Date(task.date);
-            // Use local date parts to avoid timezone issues with toISOString()
             const year = taskDate.getFullYear();
             const month = String(taskDate.getMonth() + 1).padStart(2, '0');
             const day = String(taskDate.getDate()).padStart(2, '0');
@@ -86,7 +81,7 @@ const GraphDisplay: React.FC<GraphDisplayProps> = ({ tasks, config, onClear, ani
         const sortedDates = Array.from(completedTasksPerDay.keys()).sort();
 
         return sortedDates.map(dateString => {
-            const date = new Date(`${dateString}T00:00:00`); // Use local timezone for display
+            const date = new Date(`${dateString}T00:00:00`);
             const label = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
             return {
                 label,
@@ -99,7 +94,7 @@ const GraphDisplay: React.FC<GraphDisplayProps> = ({ tasks, config, onClear, ani
         return [];
     }
   }, [tasks, config.analysis]);
-  
+
   const productivityStreak = useMemo(() => {
     if (config.analysis !== 'Streak') return 0;
     const completedDates = [...new Set(tasks
@@ -127,40 +122,56 @@ const GraphDisplay: React.FC<GraphDisplayProps> = ({ tasks, config, onClear, ani
     }
     return Math.max(maxStreak, currentStreak);
   }, [tasks, config.analysis]);
-
+  
   const renderChart = () => {
     if (!chartData || chartData.length === 0 || chartData.every(d => d.value === 0)) {
         return <p className="text-slate-500 text-center py-10">No data available for this analysis.</p>;
     }
     
     switch (config.type) {
-        case 'Bar': return <BarChart data={chartData} animate={animate} />;
-        case 'Line': return <LineChart data={chartData} animate={animate} />;
-        case 'Pie': return <PieChart data={chartData} animate={animate} />;
+        case 'Bar': return <BarChart data={chartData} />;
+        case 'Line': return <LineChart data={chartData} />;
+        case 'Pie': return <PieChart data={chartData} />;
         default: return null;
     }
   };
 
   return (
-    <div className="w-full mt-8 animate-fade-in">
-        <div className="bg-white/60 backdrop-blur-md rounded-2xl p-6 border border-slate-200/50">
-            <div className="flex justify-between items-center mb-4">
-                 <h2 className="text-xl font-bold text-slate-900">{analysisTitle}</h2>
-                 <button onClick={onClear} className="text-sm font-semibold text-blue-600 hover:text-blue-800">New Graph</button>
-            </div>
-
-            {config.analysis === 'Streak' ? (
-                <div className="flex flex-col items-center justify-center p-4">
-                    <StreakIcon className="h-12 w-12 text-yellow-500" />
-                    <span className="text-6xl font-extrabold text-slate-900 mt-2">{productivityStreak}</span>
-                    <span className="text-lg text-slate-500 font-medium">Day Streak</span>
-                </div>
-            ) : (
-                <div className="h-64 flex items-center justify-center">
-                    {renderChart()}
-                </div>
-            )}
+    <div
+      className={`fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm ${animationClass}`}
+      onClick={handleClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="graph-modal-title"
+    >
+      <div
+        className="modal-content w-full max-w-lg bg-slate-50 rounded-2xl shadow-xl p-6"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex justify-between items-center mb-4">
+            <h3 id="graph-modal-title" className="text-xl font-bold text-slate-800">{analysisTitle}</h3>
+            <button 
+                onClick={handleClose} 
+                className="text-slate-400 hover:text-slate-600 transition-colors"
+                aria-label="Close"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
         </div>
+         {config.analysis === 'Streak' ? (
+            <div className="flex flex-col items-center justify-center p-4">
+                <StreakIcon className="h-12 w-12 text-yellow-500" />
+                <span className="text-6xl font-extrabold text-slate-900 mt-2">{productivityStreak}</span>
+                <span className="text-lg text-slate-500 font-medium">Day Streak</span>
+            </div>
+        ) : (
+            <div className="h-64 flex items-center justify-center">
+                {renderChart()}
+            </div>
+        )}
+      </div>
     </div>
   );
 };
@@ -170,14 +181,13 @@ const GraphOptionsModal: React.FC<{
   onClose: () => void;
   onSelectAnalysis: (option: GraphOption) => void;
   onSelectGraphType: (type: GraphType) => void;
-  animationClass: string;
   step: ModalStep;
-}> = ({ onClose, onSelectAnalysis, onSelectGraphType, animationClass, step }) => {
+}> = ({ onClose, onSelectAnalysis, onSelectGraphType, step }) => {
     const title = step === 'analysis' ? 'How would you like to visualize?' : 'Choose a Chart Type';
     
     return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm ${animationClass}`}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
@@ -191,7 +201,7 @@ const GraphOptionsModal: React.FC<{
                 className="text-slate-400 hover:text-slate-600 transition-colors"
                 aria-label="Close"
             >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
@@ -202,7 +212,7 @@ const GraphOptionsModal: React.FC<{
                 <button
                   key={id}
                   onClick={() => onSelectAnalysis(id)}
-                  className="w-full text-left p-4 rounded-lg font-semibold transition-all duration-200 bg-white/60 text-slate-700 border border-slate-200 hover:bg-blue-100 hover:border-blue-300 hover:text-blue-700"
+                  className="w-full text-left p-4 rounded-lg font-semibold transition-colors duration-200 bg-white/60 text-slate-700 border border-slate-200 hover:bg-blue-100 hover:border-blue-300 hover:text-blue-700"
                 >
                   {label}
                 </button>
@@ -212,7 +222,7 @@ const GraphOptionsModal: React.FC<{
                 <button
                     key={id}
                     onClick={() => onSelectGraphType(id)}
-                    className="w-full flex items-center p-4 rounded-lg font-semibold transition-all duration-200 bg-white/60 text-slate-700 border border-slate-200 hover:bg-blue-100 hover:border-blue-300 hover:text-blue-700"
+                    className="w-full flex items-center p-4 rounded-lg font-semibold transition-colors duration-200 bg-white/60 text-slate-700 border border-slate-200 hover:bg-blue-100 hover:border-blue-300 hover:text-blue-700"
                 >
                     {icon}
                     {label}
@@ -225,25 +235,20 @@ const GraphOptionsModal: React.FC<{
   );
 };
 
-const TrackerPage: React.FC<TrackerPageProps> = ({ tasks, generatedGraph, onGenerateGraph, animateGraph, onAnimationDone }) => {
+const TrackerPage: React.FC<TrackerPageProps> = ({ tasks, generatedGraph, onGenerateGraph }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [modalAnimationClass, setModalAnimationClass] = useState('');
   const [modalStep, setModalStep] = useState<ModalStep>('analysis');
   const [selectedAnalysis, setSelectedAnalysis] = useState<GraphOption | null>(null);
 
   const openModal = () => {
     setModalStep('analysis');
     setIsModalVisible(true);
-    setTimeout(() => setModalAnimationClass('modal-enter'), 10);
   };
 
   const closeModal = (callback?: () => void) => {
-    setModalAnimationClass('modal-exit');
-    setTimeout(() => {
-        setIsModalVisible(false);
-        setModalStep('analysis');
-        if (callback) callback();
-    }, 200); // Corresponds to animation duration
+    setIsModalVisible(false);
+    setModalStep('analysis');
+    if (callback) callback();
   };
 
   const handleAnalysisSelect = (option: GraphOption) => {
@@ -272,33 +277,36 @@ const TrackerPage: React.FC<TrackerPageProps> = ({ tasks, generatedGraph, onGene
         <p className="text-slate-500 mt-2">Track your progress and productivity.</p>
 
         <div className="w-full max-w-md">
-            {generatedGraph ? (
-                <GraphDisplay tasks={tasks} config={generatedGraph} onClear={() => onGenerateGraph(null)} animate={animateGraph} onAnimationDone={onAnimationDone} />
-            ) : (
-                <div className="w-full mt-12 bg-white/60 backdrop-blur-md rounded-2xl p-8 border border-slate-200/50">
-                    <h2 className="text-2xl font-bold text-slate-900">Productivity Insights</h2>
-                    <p className="text-slate-500 mt-3 mb-6">
-                        Generate a graph to visualize your task trends and track your progress over time.
-                    </p>
-                    <button
-                        onClick={openModal}
-                        className="w-full flex items-center justify-center bg-gradient-to-br from-blue-600 to-blue-800 text-white font-bold py-3 px-4 rounded-lg transition-transform transform hover:scale-105 shadow-lg shadow-blue-500/30"
-                    >
-                        <GraphIcon />
-                        Generate Graph
-                    </button>
-                </div>
-            )}
+            <div className="w-full mt-12 bg-white/60 backdrop-blur-md rounded-2xl p-8 border border-slate-200/50 content-fade-in-active">
+                <h2 className="text-2xl font-bold text-slate-900">Productivity Insights</h2>
+                <p className="text-slate-500 mt-3 mb-6">
+                    Generate a graph to visualize your task trends and track your progress over time.
+                </p>
+                <button
+                    onClick={openModal}
+                    className="w-full flex items-center justify-center bg-gradient-to-br from-blue-600 to-blue-800 text-white font-bold py-3 px-4 rounded-lg shadow-lg shadow-blue-500/30 transition-none active:scale-100"
+                >
+                    <GraphIcon />
+                    Generate Graph
+                </button>
+            </div>
         </div>
       </div>
 
       {isModalVisible && (
         <GraphOptionsModal
-            animationClass={modalAnimationClass}
             onClose={() => closeModal()}
             onSelectAnalysis={handleAnalysisSelect}
             onSelectGraphType={handleGraphTypeSelect}
             step={modalStep}
+        />
+      )}
+      
+      {generatedGraph && (
+        <GraphViewModal
+            tasks={tasks}
+            config={generatedGraph}
+            onClose={() => onGenerateGraph(null)}
         />
       )}
     </>

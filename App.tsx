@@ -79,16 +79,8 @@ const App: React.FC = () => {
     return today;
   });
   const [generatedGraph, setGeneratedGraph] = useState<GraphConfig | null>(null);
-  const [animateGraph, setAnimateGraph] = useState(false);
-
-  const handleAnimationDone = () => {
-    setAnimateGraph(false);
-  };
 
   const handleGenerateGraph = (config: GraphConfig | null) => {
-    if (config && JSON.stringify(config) !== JSON.stringify(generatedGraph)) {
-      setAnimateGraph(true);
-    }
     setGeneratedGraph(config);
   };
 
@@ -144,7 +136,7 @@ const App: React.FC = () => {
       case 'Add':
         return <AddOrEditTaskPage onNavigate={onNavigate} onAddTask={handleAddTask} selectedDate={selectedDate} />;
       case 'Tracker':
-        return <TrackerPage tasks={tasks} generatedGraph={generatedGraph} onGenerateGraph={handleGenerateGraph} animateGraph={animateGraph} onAnimationDone={handleAnimationDone} />;
+        return <TrackerPage tasks={tasks} generatedGraph={generatedGraph} onGenerateGraph={handleGenerateGraph} />;
       case 'Settings':
         return <SettingsPage />;
       default:

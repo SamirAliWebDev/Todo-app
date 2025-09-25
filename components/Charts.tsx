@@ -59,7 +59,7 @@ const calculateGridParams = (maxValue: number) => {
 
 
 // Bar Chart Component
-export const BarChart: React.FC<{ data: ChartDataItem[], animate?: boolean }> = ({ data, animate = false }) => {
+export const BarChart: React.FC<{ data: ChartDataItem[] }> = ({ data }) => {
     const rawMaxValue = Math.max(...data.map(d => d.value), 0);
     const { niceMaxValue, tickValues } = calculateGridParams(rawMaxValue);
     
@@ -106,14 +106,12 @@ export const BarChart: React.FC<{ data: ChartDataItem[], animate?: boolean }> = 
                     <g key={item.label} transform={`translate(${x}, 0)`}>
                         <title>{`${item.label}: ${item.value}`}</title>
                         <rect
-                            className={animate ? 'bar-animated' : ''}
                             x="0"
                             y={drawableHeight - barHeight}
                             width={barWidth}
                             height={barHeight}
                             fill={item.color}
                             rx="4"
-                            style={{ animationDelay: `${index * 100}ms` }}
                         />
                         <text x={barWidth / 2} y={chartHeight - 4} textAnchor="middle" fontSize="10" fill="#64748b">{item.label}</text>
                     </g>
@@ -125,7 +123,7 @@ export const BarChart: React.FC<{ data: ChartDataItem[], animate?: boolean }> = 
 
 
 // Line Chart Component
-export const LineChart: React.FC<{ data: ChartDataItem[], animate?: boolean }> = ({ data, animate = false }) => {
+export const LineChart: React.FC<{ data: ChartDataItem[] }> = ({ data }) => {
     const rawMaxValue = Math.max(...data.map(d => d.value), 0);
     const { niceMaxValue, tickValues } = calculateGridParams(rawMaxValue);
     
@@ -174,7 +172,6 @@ export const LineChart: React.FC<{ data: ChartDataItem[], animate?: boolean }> =
             </g>
             {canDrawLine && (
                  <polyline
-                    className={animate ? 'line-path-animated' : ''}
                     fill="none"
                     stroke="#3b82f6"
                     strokeWidth="3"
@@ -190,14 +187,12 @@ export const LineChart: React.FC<{ data: ChartDataItem[], animate?: boolean }> =
                     <g key={item.label}>
                          <title>{`${item.label}: ${item.value}`}</title>
                         <circle 
-                            className={animate ? 'line-point-animated' : ''}
                             cx={x} 
                             cy={y} 
                             r="5" 
                             fill="#fff" 
                             stroke="#3b82f6" 
                             strokeWidth="2" 
-                            style={{ animationDelay: animate ? `${index * 150}ms` : '0ms' }}
                         />
                         <text x={x} y={chartHeight - padding.bottom + 15} textAnchor="middle" fontSize="10" fill="#64748b">{item.label}</text>
                     </g>
@@ -224,13 +219,13 @@ const PieSlice: React.FC<{ item: ChartDataItem; startAngle: number; endAngle: nu
     );
 };
 
-export const PieChart: React.FC<{ data: ChartDataItem[], animate?: boolean }> = ({ data, animate = false }) => {
+export const PieChart: React.FC<{ data: ChartDataItem[] }> = ({ data }) => {
     const total = data.reduce((sum, item) => sum + item.value, 0);
     let startAngle = 0;
     
     return (
         <div className="w-full h-full flex flex-col md:flex-row items-center justify-center gap-4">
-            <svg viewBox="0 0 100 100" className={`w-40 h-40 ${animate ? 'pie-chart-animated' : ''}`} aria-label="Pie chart">
+            <svg viewBox="0 0 100 100" className="w-40 h-40" aria-label="Pie chart">
                 {data.map(item => {
                     const angle = (item.value / total) * 360;
                     const slice = <PieSlice key={item.label} item={item} startAngle={startAngle} endAngle={startAngle + angle} />;
