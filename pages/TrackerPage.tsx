@@ -1,13 +1,21 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import type { Task, GraphOption, GraphType, GraphConfig } from '../types';
 import { GraphIcon, BarChartIcon, LineChartIcon, PieChartIcon, StreakIcon } from '../components/Icons';
 import { BarChart, LineChart, PieChart } from '../components/Charts';
 
 type ModalStep = 'analysis' | 'type';
 
+// Helper function to check if two dates are the same day
+const isSameDay = (d1: Date, d2: Date) => {
+    if (!d1 || !d2) return false;
+    return d1.getFullYear() === d2.getFullYear() &&
+           d1.getMonth() === d2.getMonth() &&
+           d1.getDate() === d2.getDate();
+};
+
 const analysisOptions: { id: GraphOption; label: string }[] = [
-  { id: 'Completion', label: 'Task Completion Rate' },
-  { id: 'Priority', label: 'Priority Distribution' },
+  { id: 'Completion', label: "Today's Completion Rate" },
+  { id: 'Priority', label: 'Priority Distribution (All Tasks)' },
   { id: 'PerDay', label: 'Tasks Over Time' },
   { id: 'Streak', label: 'Productivity Streak' },
 ];
@@ -20,26 +28,16 @@ const graphTypes: { id: GraphType, label: string, icon: React.ReactNode }[] = [
 
 interface TrackerPageProps {
   tasks: Task[];
-  generatedGraph: GraphConfig | null;
-  onGenerateGraph: (config: GraphConfig | null) => void;
+  generatedGraphs: GraphConfig[];
+  onGenerateGraph: (config: Omit<GraphConfig, 'id'>) => void;
+  onDeleteGraph: (graphId: string) => void;
 }
 
-const GraphViewModal: React.FC<{
+const GraphDisplay: React.FC<{
   tasks: Task[];
   config: GraphConfig;
   onClose: () => void;
 }> = ({ tasks, config, onClose }) => {
-  const [animationClass, setAnimationClass] = useState('');
-
-  useEffect(() => {
-    setTimeout(() => setAnimationClass('modal-enter'), 10);
-  }, []);
-
-  const handleClose = () => {
-    setAnimationClass('modal-exit');
-    setTimeout(onClose, 200); // Wait for animation
-  };
-
   const analysisTitle = analysisOptions.find(opt => opt.id === config.analysis)?.label || '';
   
   const chartData = useMemo(() => {
@@ -47,10 +45,12 @@ const GraphViewModal: React.FC<{
 
     switch (config.analysis) {
       case 'Completion':
-        const completed = tasks.filter(t => t.completed).length;
+        const today = new Date();
+        const todaysTasks = tasks.filter(task => isSameDay(task.date, today));
+        const completed = todaysTasks.filter(t => t.completed).length;
         return [
           { label: 'Completed', value: completed, color: '#22c55e' },
-          { label: 'Pending', value: tasks.length - completed, color: '#ef4444' },
+          { label: 'Pending', value: todaysTasks.length - completed, color: '#ef4444' },
         ];
       case 'Priority':
         const priorityMap = tasks.reduce((acc, task) => {
@@ -103,7 +103,6 @@ const GraphViewModal: React.FC<{
             const d = new Date(t.date);
             d.setHours(0,0,0,0);
             return d.getTime();
-        // FIX: Explicitly cast to Number to prevent type errors during subtraction.
         }))].sort((a, b) => Number(a) - Number(b));
     
     if (completedDates.length === 0) return 0;
@@ -111,7 +110,6 @@ const GraphViewModal: React.FC<{
     let maxStreak = 1;
     let currentStreak = 1;
     for (let i = 1; i < completedDates.length; i++) {
-        // FIX: Explicitly cast to Number to prevent type errors during subtraction.
         const diff = (Number(completedDates[i]) - Number(completedDates[i-1])) / (1000 * 60 * 60 * 24);
         if (diff === 1) {
             currentStreak++;
@@ -137,21 +135,11 @@ const GraphViewModal: React.FC<{
   };
 
   return (
-    <div
-      className={`fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm ${animationClass}`}
-      onClick={handleClose}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="graph-modal-title"
-    >
-      <div
-        className="modal-content w-full max-w-lg bg-slate-800 border border-slate-700 rounded-2xl shadow-xl p-6"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <div className="w-full bg-slate-800/40 backdrop-blur-md rounded-2xl p-6 border border-white/10 shadow-xl shadow-black/25 content-fade-in-active">
         <div className="flex justify-between items-center mb-4">
-            <h3 id="graph-modal-title" className="text-xl font-bold text-white">{analysisTitle}</h3>
+            <h3 className="text-xl font-bold text-white">{analysisTitle}</h3>
             <button 
-                onClick={handleClose} 
+                onClick={onClose} 
                 className="text-slate-400 hover:text-white transition-colors"
                 aria-label="Close"
             >
@@ -172,7 +160,6 @@ const GraphViewModal: React.FC<{
             </div>
         )}
       </div>
-    </div>
   );
 };
 
@@ -235,12 +222,14 @@ const GraphOptionsModal: React.FC<{
   );
 };
 
-const TrackerPage: React.FC<TrackerPageProps> = ({ tasks, generatedGraph, onGenerateGraph }) => {
+const TrackerPage: React.FC<TrackerPageProps> = ({ tasks, generatedGraphs, onGenerateGraph, onDeleteGraph }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalStep, setModalStep] = useState<ModalStep>('analysis');
   const [selectedAnalysis, setSelectedAnalysis] = useState<GraphOption | null>(null);
+  const canAddGraph = generatedGraphs.length < 4;
 
   const openModal = () => {
+    if (!canAddGraph) return;
     setModalStep('analysis');
     setIsModalVisible(true);
   };
@@ -248,6 +237,7 @@ const TrackerPage: React.FC<TrackerPageProps> = ({ tasks, generatedGraph, onGene
   const closeModal = (callback?: () => void) => {
     setIsModalVisible(false);
     setModalStep('analysis');
+    setSelectedAnalysis(null);
     if (callback) callback();
   };
 
@@ -280,17 +270,30 @@ const TrackerPage: React.FC<TrackerPageProps> = ({ tasks, generatedGraph, onGene
             <div className="w-full mt-12 bg-slate-800/40 backdrop-blur-md rounded-2xl p-8 border border-white/10 shadow-xl shadow-black/25 content-fade-in-active">
                 <h2 className="text-2xl font-bold text-white">Productivity Insights</h2>
                 <p className="text-slate-300 mt-3 mb-6">
-                    Generate a graph to visualize your task trends and track your progress over time.
+                    Generate up to 4 graphs to visualize your task trends and track your progress.
                 </p>
                 <button
                     onClick={openModal}
-                    className="w-full flex items-center justify-center bg-gradient-to-br from-cyan-500 to-cyan-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg shadow-cyan-500/30 transition-none active:scale-100"
+                    disabled={!canAddGraph}
+                    className="w-full flex items-center justify-center bg-gradient-to-br from-cyan-500 to-cyan-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg shadow-cyan-500/30 transition-all active:scale-100 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
                 >
                     <GraphIcon />
-                    Generate Graph
+                    {canAddGraph ? 'Generate Graph' : 'Graph Limit Reached (4)'}
                 </button>
             </div>
+            
+            <div className="mt-8 grid gap-8">
+                {generatedGraphs.map(graph => (
+                    <GraphDisplay
+                        key={graph.id}
+                        tasks={tasks}
+                        config={graph}
+                        onClose={() => onDeleteGraph(graph.id)}
+                    />
+                ))}
+            </div>
         </div>
+
       </div>
 
       {isModalVisible && (
@@ -299,14 +302,6 @@ const TrackerPage: React.FC<TrackerPageProps> = ({ tasks, generatedGraph, onGene
             onSelectAnalysis={handleAnalysisSelect}
             onSelectGraphType={handleGraphTypeSelect}
             step={modalStep}
-        />
-      )}
-      
-      {generatedGraph && (
-        <GraphViewModal
-            tasks={tasks}
-            config={generatedGraph}
-            onClose={() => onGenerateGraph(null)}
         />
       )}
     </>

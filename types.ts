@@ -14,6 +14,7 @@ export interface Task {
 export type GraphOption = 'Completion' | 'Priority' | 'PerDay' | 'Streak';
 export type GraphType = 'Bar' | 'Line' | 'Pie';
 export interface GraphConfig {
+  id: string;
   analysis: GraphOption;
   type: GraphType;
 }

@@ -23,28 +23,22 @@
 
       /* Generic Enter Animation (Fade In) */
       @keyframes page-enter {
-        0% {
-          opacity: 0;
-        }
-        100% {
-          opacity: 1;
-        }
+        from { opacity: 0; }
+        to { opacity: 1; }
       }
       .page-enter-active {
         animation: page-enter 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+        will-change: opacity; /* Performance boost */
       }
 
       /* Generic Exit Animation (Fade Out) - FASTER */
       @keyframes page-exit {
-        0% {
-          opacity: 1;
-        }
-        100% {
-          opacity: 0;
-        }
+        from { opacity: 1; }
+        to { opacity: 0; }
       }
       .page-exit-active {
         animation: page-exit 0.15s cubic-bezier(0.470, 0.000, 0.745, 0.715) both;
+        will-change: opacity; /* Performance boost */
       }
 
       /* Circular Wipe Keyframes for Home Icon */
@@ -64,6 +58,12 @@
       }
 
       /* Home page specific animation */
+      .page-home-enter-active,
+      .page-home-exit-active {
+        /* Performance Boost: Force layer and hint browser */
+        transform: translateZ(0); 
+        will-change: clip-path;
+      }
       .page-home-enter-active {
         animation: grow-circle-home 0.5s cubic-bezier(0.76, 0, 0.24, 1) both;
       }
@@ -98,65 +98,66 @@
         animation: fade-in-content 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) 0.2s forwards;
         position: relative; /* Establish stacking context for content */
         z-index: 2; /* Place content above the blue overlay */
+        will-change: opacity; /* Performance boost */
       }
 
       /* Slide Up/Down Keyframes for Add Page */
       @keyframes slide-in-up {
-        from { transform: translateY(100%); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
+        from { transform: translateY(100%) translateZ(0); opacity: 0; }
+        to { transform: translateY(0) translateZ(0); opacity: 1; }
       }
       .page-add-enter-active {
         animation: slide-in-up 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+        will-change: transform, opacity; /* Performance boost */
       }
 
       @keyframes slide-out-down {
-        from { transform: translateY(0); opacity: 1; }
-        to { transform: translateY(100%); opacity: 0; }
+        from { transform: translateY(0) translateZ(0); opacity: 1; }
+        to { transform: translateY(100%) translateZ(0); opacity: 0; }
       }
       .page-add-exit-active {
         animation: slide-out-down 0.3s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
+        will-change: transform, opacity; /* Performance boost */
       }
 
       /* Animation for the timeline line */
       @keyframes grow-line {
-        from {
-          transform: scaleY(0);
-        }
-        to {
-          transform: scaleY(1);
-        }
+        from { transform: scaleY(0) translateZ(0); }
+        to { transform: scaleY(1) translateZ(0); }
       }
       .timeline-line-animate {
         transform-origin: top;
         animation: grow-line 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+        will-change: transform; /* Performance boost */
       }
 
       /* Animation for each task item */
       @keyframes fade-in-slide-up {
         from {
           opacity: 0;
-          transform: translateY(20px);
+          transform: translateY(20px) translateZ(0);
         }
         to {
           opacity: 1;
-          transform: translateY(0);
+          transform: translateY(0) translateZ(0);
         }
       }
       .task-item-animate {
         opacity: 0; /* Start hidden */
         animation: fade-in-slide-up 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        will-change: transform, opacity; /* Performance boost */
       }
 
       /* Animation for task item deletion */
       @keyframes fade-out-shrink {
         from {
           opacity: 1;
-          transform: scaleY(1);
+          transform: scaleY(1) translateZ(0);
           max-height: 100px; /* Should be larger than any task item */
         }
         to {
           opacity: 0;
-          transform: scaleY(0);
+          transform: scaleY(0) translateZ(0);
           max-height: 0;
           padding-top: 0;
           padding-bottom: 0;
@@ -167,22 +168,25 @@
         transform-origin: top;
         animation: fade-out-shrink 0.3s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
         overflow: hidden;
+        /* Performance Boost: Hint to browser to optimize known expensive animations */
+        will-change: transform, opacity, max-height;
       }
       
       /* Animation for date carousel items */
       @keyframes slide-in-right-fade {
         from {
           opacity: 0;
-          transform: translateX(20px);
+          transform: translateX(20px) translateZ(0);
         }
         to {
           opacity: 1;
-          transform: translateX(0);
+          transform: translateX(0) translateZ(0);
         }
       }
       .date-item-animate {
         opacity: 0; /* Start hidden */
         animation: slide-in-right-fade 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        will-change: transform, opacity; /* Performance boost */
       }
 
       /* Modal animations */
@@ -195,56 +199,78 @@
         to { opacity: 0; }
       }
       @keyframes modal-content-slide-up {
-        from { transform: translateY(30px) scale(0.95); }
-        to { transform: translateY(0) scale(1); }
+        from { transform: translateY(30px) scale(0.95) translateZ(0); }
+        to { transform: translateY(0) scale(1) translateZ(0); }
       }
       @keyframes modal-content-slide-down {
-        from { transform: translateY(0) scale(1); }
-        to { transform: translateY(30px) scale(0.95); }
+        from { transform: translateY(0) scale(1) translateZ(0); }
+        to { transform: translateY(30px) scale(0.95) translateZ(0); }
       }
 
       .modal-enter {
         animation: modal-fade-in 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+        will-change: opacity; /* Performance boost */
       }
       .modal-enter .modal-content {
         animation: modal-content-slide-up 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+        will-change: transform; /* Performance boost */
       }
       .modal-exit {
         animation: modal-fade-out 0.2s ease-out forwards;
+        will-change: opacity; /* Performance boost */
       }
       .modal-exit .modal-content {
         animation: modal-content-slide-down 0.2s ease-out forwards;
+        will-change: transform; /* Performance boost */
       }
       
       /* Chart Animations */
-      @keyframes bar-grow { from { transform: scaleY(0); } }
-      .bar-animated { animation: bar-grow 0.5s ease-out forwards; transform-origin: bottom; }
+      @keyframes bar-grow { from { transform: scaleY(0) translateZ(0); } }
+      .bar-animated { 
+        animation: bar-grow 0.5s ease-out forwards; 
+        transform-origin: bottom; 
+        will-change: transform; /* Performance boost */
+      }
 
       @keyframes draw-line { to { stroke-dashoffset: 0; } }
-      .line-path-animated { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: draw-line 1s ease-out forwards; }
+      .line-path-animated { 
+        stroke-dasharray: 1000; 
+        stroke-dashoffset: 1000; 
+        animation: draw-line 1s ease-out forwards; 
+        will-change: stroke-dashoffset; /* Performance boost */
+      }
       
       @keyframes fade-in { to { opacity: 1; } }
-      .line-point-animated { opacity: 0; animation: fade-in 0.3s ease-out forwards; }
+      .line-point-animated { 
+        opacity: 0; 
+        animation: fade-in 0.3s ease-out forwards; 
+        will-change: opacity; /* Performance boost */
+      }
       
       @keyframes pie-spin-fade-in { 
-        from { transform: scale(0.5) rotate(-90deg); opacity: 0; } 
-        to { transform: scale(1) rotate(0deg); opacity: 1; }
+        from { transform: scale(0.5) rotate(-90deg) translateZ(0); opacity: 0; } 
+        to { transform: scale(1) rotate(0deg) translateZ(0); opacity: 1; }
       }
-      .pie-chart-animated { animation: pie-spin-fade-in 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; transform-origin: center; }
+      .pie-chart-animated { 
+        animation: pie-spin-fade-in 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; 
+        transform-origin: center; 
+        will-change: transform, opacity; /* Performance boost */
+      }
 
       /* Animation for content blocks fading in */
       @keyframes content-fade-in {
         from {
           opacity: 0;
-          transform: translateY(10px);
+          transform: translateY(10px) translateZ(0);
         }
         to {
           opacity: 1;
-          transform: translateY(0);
+          transform: translateY(0) translateZ(0);
         }
       }
       .content-fade-in-active {
         animation: content-fade-in 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+        will-change: transform, opacity; /* Performance boost */
       }
     </style>
   <script type="importmap">

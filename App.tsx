@@ -78,11 +78,21 @@ const App: React.FC = () => {
     today.setHours(0, 0, 0, 0);
     return today;
   });
-  const [generatedGraph, setGeneratedGraph] = useState<GraphConfig | null>(null);
+  const [generatedGraphs, setGeneratedGraphs] = useState<GraphConfig[]>([]);
 
-  const handleGenerateGraph = (config: GraphConfig | null) => {
-    setGeneratedGraph(config);
+  const handleGenerateGraph = (config: Omit<GraphConfig, 'id'>) => {
+    if (generatedGraphs.length >= 4) return; // Enforce limit of 4 graphs
+    const newGraph: GraphConfig = {
+      ...config,
+      id: Date.now().toString(), // Add a unique ID
+    };
+    setGeneratedGraphs(prevGraphs => [...prevGraphs, newGraph]);
   };
+  
+  const handleDeleteGraph = (graphId: string) => {
+    setGeneratedGraphs(prevGraphs => prevGraphs.filter(graph => graph.id !== graphId));
+  };
+
 
   const onNavigate = (page: Page) => {
     if (page === activePage || isTransitioning) return;
@@ -136,7 +146,7 @@ const App: React.FC = () => {
       case 'Add':
         return <AddOrEditTaskPage onNavigate={onNavigate} onAddTask={handleAddTask} selectedDate={selectedDate} />;
       case 'Tracker':
-        return <TrackerPage tasks={tasks} generatedGraph={generatedGraph} onGenerateGraph={handleGenerateGraph} />;
+        return <TrackerPage tasks={tasks} generatedGraphs={generatedGraphs} onGenerateGraph={handleGenerateGraph} onDeleteGraph={handleDeleteGraph} />;
       case 'Settings':
         return <SettingsPage />;
       default:
