@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import type { Page, Task, GraphConfig, Theme } from './types';
+import type { Page, Task, GraphConfig, Theme, TaskCategory, PredefinedCategory } from './types';
 import BottomNav from './components/BottomNav';
 import HomePage from './pages/HomePage';
 import TasksPage from './pages/TasksPage';
@@ -50,13 +50,29 @@ const App: React.FC = () => {
       const savedTasks = localStorage.getItem('tasks');
       if (savedTasks) {
         const parsedTasks = JSON.parse(savedTasks);
-        // Ensure date strings are converted back to Date objects
-        return parsedTasks.map((task: Omit<Task, 'date'> & { date: string }) => ({
-          ...task,
-          date: new Date(task.date),
-        }));
+        // Ensure date strings are converted back to Date objects and handle category migration
+        return parsedTasks.map((task: any) => {
+          let category: TaskCategory;
+
+          if (typeof task.category === 'string') {
+            // Old format: "Work", "Personal", etc.
+            category = { type: 'icon', value: task.category as PredefinedCategory };
+          } else if (task.category && typeof task.category === 'object' && 'type' in task.category && 'value' in task.category) {
+            // New format, already an object
+            category = task.category;
+          } else {
+            // Default for tasks created before categories or with corrupted data
+            category = { type: 'icon', value: 'Other' };
+          }
+          
+          return {
+            ...task,
+            date: new Date(task.date),
+            category,
+          };
+        });
       }
-      // If no saved tasks, initialize with an empty array for a clean start.
+      // If no saved tasks, initialize with an empty array.
       return [];
     } catch (error) {
       console.error('Failed to load tasks from localStorage', error);

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { Task } from '../types';
 import { TrashIcon, SmallCheckIcon } from './Icons';
+import { CategoryDisplay } from '../lib/categories';
 
 const priorityStyles: { [key in Task['priority']]: string } = {
   Low: 'bg-green-400',
@@ -59,10 +60,13 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onToggle, onDelete, index }) 
           className="flex-1 min-w-0 cursor-pointer"
           onClick={() => onToggle(task.id)}
         >
-          <p id={`task-title-${task.id}`} className={`font-semibold text-slate-900 dark:text-white truncate ${task.completed ? 'line-through text-slate-500 dark:text-slate-400' : ''}`}>
-            {task.title}
-          </p>
-          {task.description && <p className="text-sm text-slate-500 dark:text-slate-400 truncate">{task.description}</p>}
+          <div className="flex items-center space-x-3">
+            <CategoryDisplay category={task.category} className="w-6 h-6 flex-shrink-0" />
+            <p id={`task-title-${task.id}`} className={`font-semibold text-slate-900 dark:text-white truncate ${task.completed ? 'line-through text-slate-500 dark:text-slate-400' : ''}`}>
+              {task.title}
+            </p>
+          </div>
+          {task.description && <p className="text-sm text-slate-500 dark:text-slate-400 truncate mt-1 pl-9">{task.description}</p>}
         </div>
         <button
           onClick={handleDelete}

@@ -2,6 +2,16 @@ export type Page = 'Home' | 'Tasks' | 'Add' | 'Tracker' | 'Settings';
 
 export type Priority = 'Low' | 'Medium' | 'High';
 
+export type PredefinedCategory = 'Work' | 'Personal' | 'Shopping' | 'Health' | 'Fitness' | 'Study' | 'Other';
+
+export type TaskCategory = {
+  type: 'icon';
+  value: PredefinedCategory;
+} | {
+  type: 'emoji';
+  value: string; // The emoji character
+};
+
 export interface Task {
   id: string;
   title: string;
@@ -9,6 +19,7 @@ export interface Task {
   priority: Priority;
   completed: boolean;
   date: Date;
+  category: TaskCategory;
 }
 
 export type GraphOption = 'Completion' | 'Priority' | 'PerDay' | 'Streak';

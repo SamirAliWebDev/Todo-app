@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UserIcon, PaletteIcon, StarIcon, ChevronRightIcon, ChevronLeftIcon, SunIcon, MoonIcon, SmallCheckIcon } from '../components/Icons';
+import { UserCircleIcon, PaletteIcon, StarIcon, ChevronRightIcon, ChevronLeftIcon, SunIcon, MoonIcon, SmallCheckIcon } from '../components/Icons';
 import type { Theme } from '../types';
 
 type SettingsSection = 'main' | 'profile' | 'appearance' | 'plan';
@@ -7,7 +7,7 @@ type SettingsSection = 'main' | 'profile' | 'appearance' | 'plan';
 const settingsItems = [
   {
     id: 'profile',
-    icon: <UserIcon />,
+    icon: <UserCircleIcon />,
     label: 'Profile',
     description: 'Manage your personal information',
   },
