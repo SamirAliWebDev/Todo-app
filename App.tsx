@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import type { Page, Task, GraphConfig } from './types';
+import type { Page, Task, GraphConfig, Theme } from './types';
 import BottomNav from './components/BottomNav';
 import HomePage from './pages/HomePage';
 import TasksPage from './pages/TasksPage';
@@ -56,13 +56,29 @@ const App: React.FC = () => {
           date: new Date(task.date),
         }));
       }
+      // If no saved tasks, initialize with an empty array for a clean start.
       return [];
     } catch (error) {
       console.error('Failed to load tasks from localStorage', error);
+      // Fallback to an empty array on error.
       return [];
     }
   });
   
+  const [theme, setTheme] = useState<Theme>(() => {
+    const savedTheme = localStorage.getItem('theme');
+    return (savedTheme === 'light' || savedTheme === 'dark') ? savedTheme : 'dark';
+  });
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
   useEffect(() => {
     try {
       localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -148,14 +164,14 @@ const App: React.FC = () => {
       case 'Tracker':
         return <TrackerPage tasks={tasks} generatedGraphs={generatedGraphs} onGenerateGraph={handleGenerateGraph} onDeleteGraph={handleDeleteGraph} />;
       case 'Settings':
-        return <SettingsPage />;
+        return <SettingsPage theme={theme} setTheme={setTheme} />;
       default:
         return <HomePage tasks={tasks} />;
     }
   };
 
   return (
-    <div className="bg-gradient-to-b from-slate-900 to-slate-800 text-slate-300 min-h-screen flex flex-col font-sans antialiased">
+    <div className="bg-gradient-to-b from-slate-100 to-slate-200 text-slate-700 dark:from-slate-900 dark:to-slate-800 dark:text-slate-300 min-h-screen flex flex-col font-sans antialiased">
       <main className="flex-grow relative overflow-hidden">
         <div
           key={activePage}

@@ -18,3 +18,5 @@ export interface GraphConfig {
   analysis: GraphOption;
   type: GraphType;
 }
+
+export type Theme = 'light' | 'dark';

@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import type { Task } from '../types';
 import TaskItem from '../components/TaskItem';
+import Header from '../components/Header';
 
 const isSameDay = (d1: Date, d2: Date) => {
     if (!d1 || !d2) return false;
@@ -19,7 +20,7 @@ const DateCarousel: React.FC<DateCarouselProps> = ({ selectedDate, onDateSelect 
     today.setHours(0, 0, 0, 0);
 
     const dates = useMemo(() => {
-        return Array.from({ length: 7 }, (_, i) => {
+        return Array.from({ length: 14 }, (_, i) => {
             const date = new Date(today);
             date.setDate(today.getDate() + i);
             return date;
@@ -27,7 +28,7 @@ const DateCarousel: React.FC<DateCarouselProps> = ({ selectedDate, onDateSelect 
     }, []);
 
     return (
-        <div className="flex space-x-3 overflow-x-auto scrollbar-hide">
+        <div className="flex space-x-3 overflow-x-auto scrollbar-hide md:justify-center">
             {dates.map((date, index) => {
                 const day = date.toLocaleString('en-US', { weekday: 'short' }).toUpperCase();
                 const dayOfMonth = date.getDate();
@@ -42,7 +43,7 @@ const DateCarousel: React.FC<DateCarouselProps> = ({ selectedDate, onDateSelect 
                             date-item-animate
                             ${isSelected
                                 ? 'bg-cyan-500 text-white shadow-lg shadow-cyan-500/30'
-                                : 'bg-slate-800/40 backdrop-blur-md hover:bg-slate-700/60 text-slate-300 border border-white/10 shadow-md shadow-black/20'
+                                : 'bg-slate-200 dark:bg-slate-800/40 backdrop-blur-md hover:bg-slate-300/80 dark:hover:bg-slate-700/60 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-white/10 shadow-md shadow-black/20'
                             }
                         `}
                         style={{ animationDelay: `${index * 50}ms` }}
@@ -106,24 +107,20 @@ const TasksPage: React.FC<TasksPageProps> = ({ tasks, onToggleTask, onDeleteTask
 
     return (
         <div className="flex flex-col h-full">
-            <div className="bg-slate-800/40 backdrop-blur-md rounded-b-2xl px-6 pt-8 pb-4 border-b border-white/10 shadow-lg shadow-black/20">
-                <div className="mb-6 text-center">
-                    <h1 className="text-3xl font-extrabold text-white">{headerInfo.dayName}</h1>
-                    <p className="text-slate-400">{headerInfo.fullDate}</p>
-                </div>
+            <Header title={headerInfo.dayName} subtitle={headerInfo.fullDate}>
                 <DateCarousel selectedDate={selectedDate} onDateSelect={onDateSelect} />
-            </div>
+            </Header>
             <div className="flex-grow p-6">
                 {filteredTasks.length === 0 ? (
                      <div className="flex items-center justify-center h-full">
-                        <p className="text-slate-400">
+                        <p className="text-slate-500 dark:text-slate-400">
                             {isTodaySelected ? "No tasks for today. Add one!" : "No tasks for this day."}
                         </p>
                     </div>
                 ) : (
                     <div className="relative">
                         {/* Vertical timeline line */}
-                        <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-slate-600 -translate-x-1/2 timeline-line-animate"></div>
+                        <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-slate-300 dark:bg-slate-600 -translate-x-1/2 timeline-line-animate"></div>
                         <ul className="space-y-6">
                             {filteredTasks.map((task, index) => (
                                 <TaskItem 

@@ -38,7 +38,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onToggle, onDelete, index }) 
         aria-label={task.completed ? `Mark "${task.title}" as incomplete` : `Mark "${task.title}" as complete`}
         className={`
           absolute left-4 top-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full 
-          ring-4 ring-slate-800 flex items-center justify-center transition-colors duration-200 z-10
+          ring-4 ring-slate-100 dark:ring-slate-800 flex items-center justify-center transition-colors duration-200 z-10
           ${task.completed ? 'bg-cyan-500' : priorityStyles[task.priority]}
         `}
       >
@@ -50,8 +50,8 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onToggle, onDelete, index }) 
         className={`
             w-full p-4 pr-12
             flex items-center justify-between transition-all duration-300
-            bg-slate-800/40 backdrop-blur-md rounded-xl border border-white/10
-            group-hover:shadow-lg group-hover:bg-slate-700/50 group-hover:border-white/20
+            bg-white/50 dark:bg-slate-800/40 backdrop-blur-md rounded-xl border border-slate-200 dark:border-white/10
+            group-hover:shadow-lg group-hover:bg-slate-200/80 dark:group-hover:bg-slate-700/50 group-hover:border-slate-300 dark:group-hover:border-white/20
             ${task.completed ? 'opacity-50' : ''}
         `}
       >
@@ -59,15 +59,15 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onToggle, onDelete, index }) 
           className="flex-1 min-w-0 cursor-pointer"
           onClick={() => onToggle(task.id)}
         >
-          <p id={`task-title-${task.id}`} className={`font-semibold text-white truncate ${task.completed ? 'line-through text-slate-400' : ''}`}>
+          <p id={`task-title-${task.id}`} className={`font-semibold text-slate-900 dark:text-white truncate ${task.completed ? 'line-through text-slate-500 dark:text-slate-400' : ''}`}>
             {task.title}
           </p>
-          {task.description && <p className="text-sm text-slate-400 truncate">{task.description}</p>}
+          {task.description && <p className="text-sm text-slate-500 dark:text-slate-400 truncate">{task.description}</p>}
         </div>
         <button
           onClick={handleDelete}
           aria-label={`Delete task: ${task.title}`}
-          className="absolute right-4 top-1/2 -translate-y-1/2 ml-4 opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-red-500 flex-shrink-0"
+          className="absolute right-4 top-1/2 -translate-y-1/2 ml-4 opacity-0 group-hover:opacity-100 transition-opacity text-slate-500 dark:text-slate-400 hover:text-red-500 flex-shrink-0"
         >
           <TrashIcon />
         </button>

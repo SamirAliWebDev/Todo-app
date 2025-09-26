@@ -123,7 +123,7 @@ const GraphDisplay: React.FC<{
   
   const renderChart = () => {
     if (!chartData || chartData.length === 0 || chartData.every(d => d.value === 0)) {
-        return <p className="text-slate-400 text-center py-10">No data available for this analysis.</p>;
+        return <p className="text-slate-500 dark:text-slate-400 text-center py-10">No data available for this analysis.</p>;
     }
     
     switch (config.type) {
@@ -135,12 +135,12 @@ const GraphDisplay: React.FC<{
   };
 
   return (
-    <div className="w-full bg-slate-800/40 backdrop-blur-md rounded-2xl p-6 border border-white/10 shadow-xl shadow-black/25 content-fade-in-active">
+    <div className="w-full bg-white/50 dark:bg-slate-800/40 backdrop-blur-md rounded-2xl p-6 border border-slate-200 dark:border-white/10 shadow-xl shadow-black/25 content-fade-in-active">
         <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-bold text-white">{analysisTitle}</h3>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white">{analysisTitle}</h3>
             <button 
                 onClick={onClose} 
-                className="text-slate-400 hover:text-white transition-colors"
+                className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
                 aria-label="Close"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24" stroke="currentColor" strokeWidth={2}>
@@ -151,8 +151,8 @@ const GraphDisplay: React.FC<{
          {config.analysis === 'Streak' ? (
             <div className="flex flex-col items-center justify-center p-4">
                 <StreakIcon className="h-12 w-12 text-yellow-500" />
-                <span className="text-6xl font-extrabold text-white mt-2">{productivityStreak}</span>
-                <span className="text-lg text-slate-300 font-medium">Day Streak</span>
+                <span className="text-6xl font-extrabold text-slate-900 dark:text-white mt-2">{productivityStreak}</span>
+                <span className="text-lg text-slate-700 dark:text-slate-300 font-medium">Day Streak</span>
             </div>
         ) : (
             <div className="h-64 flex items-center justify-center">
@@ -174,18 +174,18 @@ const GraphOptionsModal: React.FC<{
     
     return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className="modal-content w-full max-w-sm bg-slate-800 border border-slate-700 rounded-2xl shadow-xl p-6"
+        className="modal-content w-full max-w-sm bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl p-6"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-bold text-white">{title}</h3>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white">{title}</h3>
             <button 
                 onClick={onClose} 
-                className="text-slate-400 hover:text-white transition-colors"
+                className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
                 aria-label="Close"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24" stroke="currentColor" strokeWidth={2}>
@@ -199,7 +199,7 @@ const GraphOptionsModal: React.FC<{
                 <button
                   key={id}
                   onClick={() => onSelectAnalysis(id)}
-                  className="w-full text-left p-4 rounded-lg font-semibold transition-colors duration-200 bg-slate-700 text-slate-200 border border-slate-600 hover:bg-cyan-500/20 hover:border-cyan-500/50 hover:text-cyan-400"
+                  className="w-full text-left p-4 rounded-lg font-semibold transition-colors duration-200 bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-600 hover:bg-cyan-500/20 hover:border-cyan-500/50 hover:text-cyan-400"
                 >
                   {label}
                 </button>
@@ -209,7 +209,7 @@ const GraphOptionsModal: React.FC<{
                 <button
                     key={id}
                     onClick={() => onSelectGraphType(id)}
-                    className="w-full flex items-center p-4 rounded-lg font-semibold transition-colors duration-200 bg-slate-700 text-slate-200 border border-slate-600 hover:bg-cyan-500/20 hover:border-cyan-500/50 hover:text-cyan-400"
+                    className="w-full flex items-center p-4 rounded-lg font-semibold transition-colors duration-200 bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-600 hover:bg-cyan-500/20 hover:border-cyan-500/50 hover:text-cyan-400"
                 >
                     {icon}
                     {label}
@@ -262,14 +262,16 @@ const TrackerPage: React.FC<TrackerPageProps> = ({ tasks, generatedGraphs, onGen
 
   return (
     <>
-      <div className="flex flex-col items-center text-center pt-8 p-6">
-        <h1 className="text-5xl font-extrabold text-white">Tracker</h1>
-        <p className="text-slate-400 mt-2">Track your progress and productivity.</p>
+      <div className="p-6">
+        <header className="text-center mb-6">
+            <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white">Tracker</h1>
+            <p className="text-slate-500 dark:text-slate-400 mt-1">Track your progress and productivity.</p>
+        </header>
 
-        <div className="w-full max-w-md">
-            <div className="w-full mt-12 bg-slate-800/40 backdrop-blur-md rounded-2xl p-8 border border-white/10 shadow-xl shadow-black/25 content-fade-in-active">
-                <h2 className="text-2xl font-bold text-white">Productivity Insights</h2>
-                <p className="text-slate-300 mt-3 mb-6">
+        <div className="w-full max-w-md mx-auto">
+            <div className="w-full bg-white/50 dark:bg-slate-800/40 backdrop-blur-md rounded-2xl p-8 border border-slate-200 dark:border-white/10 shadow-xl shadow-black/25 content-fade-in-active">
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Productivity Insights</h2>
+                <p className="text-slate-600 dark:text-slate-300 mt-3 mb-6">
                     Generate up to 4 graphs to visualize your task trends and track your progress.
                 </p>
                 <button
@@ -293,7 +295,6 @@ const TrackerPage: React.FC<TrackerPageProps> = ({ tasks, generatedGraphs, onGen
                 ))}
             </div>
         </div>
-
       </div>
 
       {isModalVisible && (
