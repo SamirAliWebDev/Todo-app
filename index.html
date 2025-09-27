@@ -21,14 +21,14 @@
         scrollbar-width: none;
       }
 
-      /* Generic Enter Animation (Fade In) */
+      /* Generic Enter Animation (Subtle Slide + Fade) */
       @keyframes page-enter {
-        from { opacity: 0; }
-        to { opacity: 1; }
+        from { opacity: 0; transform: translateY(10px) translateZ(0); }
+        to { opacity: 1; transform: translateY(0) translateZ(0); }
       }
       .page-enter-active {
-        animation: page-enter 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
-        will-change: opacity; /* Performance boost */
+        animation: page-enter 0.2s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+        will-change: opacity, transform; /* Performance boost */
         transform: translateZ(0); /* Force hardware acceleration */
       }
 
@@ -38,7 +38,7 @@
         to { opacity: 0; }
       }
       .page-exit-active {
-        animation: page-exit 0.15s cubic-bezier(0.470, 0.000, 0.745, 0.715) both;
+        animation: page-exit 0.1s cubic-bezier(0.470, 0.000, 0.745, 0.715) both;
         will-change: opacity; /* Performance boost */
         transform: translateZ(0); /* Force hardware acceleration */
       }
@@ -107,7 +107,7 @@
         to { transform: translateY(0) translateZ(0); opacity: 1; }
       }
       .page-add-enter-active {
-        animation: slide-in-up 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+        animation: slide-in-up 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
         will-change: transform, opacity; /* Performance boost */
       }
 
@@ -116,7 +116,7 @@
         to { transform: translateY(100%) translateZ(0); opacity: 0; }
       }
       .page-add-exit-active {
-        animation: slide-out-down 0.3s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
+        animation: slide-out-down 0.2s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
         will-change: transform, opacity; /* Performance boost */
       }
 
