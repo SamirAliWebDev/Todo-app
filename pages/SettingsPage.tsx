@@ -62,7 +62,7 @@ const ProfileSettings: React.FC<{ onBack: () => void }> = ({ onBack }) => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="your.email@example.com"
-              className="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 transition placeholder:text-slate-500 dark:placeholder:text-slate-400"
+              className="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-amber-500 focus:border-amber-500 transition placeholder:text-slate-500 dark:placeholder:text-slate-400"
             />
           </div>
           <div>
@@ -75,13 +75,13 @@ const ProfileSettings: React.FC<{ onBack: () => void }> = ({ onBack }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter a new password"
-              className="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 transition placeholder:text-slate-500 dark:placeholder:text-slate-400"
+              className="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-amber-500 focus:border-amber-500 transition placeholder:text-slate-500 dark:placeholder:text-slate-400"
             />
           </div>
           <div className="pt-2">
               <button
                   type="submit"
-                  className="w-full bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-lg shadow-cyan-500/30"
+                  className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-lg shadow-amber-500/40"
               >
                   Save Changes
               </button>
@@ -107,14 +107,14 @@ const AppearanceSettings: React.FC<{ onBack: () => void; theme: Theme; setTheme:
           <div className="grid grid-cols-2 gap-4">
             <button
               onClick={() => setTheme('light')}
-              className={`flex flex-col items-center justify-center p-6 rounded-lg border-2 transition-colors ${theme === 'light' ? 'border-cyan-500 bg-cyan-500/10' : 'border-slate-300 dark:border-slate-700 bg-slate-200/50 dark:bg-slate-700/50 hover:border-cyan-400'}`}
+              className={`flex flex-col items-center justify-center p-6 rounded-lg border-2 transition-colors ${theme === 'light' ? 'border-amber-500 bg-amber-500/10' : 'border-slate-300 dark:border-slate-700 bg-slate-200/50 dark:bg-slate-700/50 hover:border-amber-400'}`}
             >
               <SunIcon />
               <span className="mt-2 font-medium text-slate-800 dark:text-slate-200">Light</span>
             </button>
             <button
               onClick={() => setTheme('dark')}
-              className={`flex flex-col items-center justify-center p-6 rounded-lg border-2 transition-colors ${theme === 'dark' ? 'border-cyan-500 bg-cyan-500/10' : 'border-slate-300 dark:border-slate-700 bg-slate-200/50 dark:bg-slate-700/50 hover:border-cyan-400'}`}
+              className={`flex flex-col items-center justify-center p-6 rounded-lg border-2 transition-colors ${theme === 'dark' ? 'border-amber-500 bg-amber-500/10' : 'border-slate-300 dark:border-slate-700 bg-slate-200/50 dark:bg-slate-700/50 hover:border-amber-400'}`}
             >
               <MoonIcon />
               <span className="mt-2 font-medium text-slate-800 dark:text-slate-200">Dark</span>
@@ -161,7 +161,7 @@ const NotificationSettings: React.FC<{ onBack: () => void }> = ({ onBack }) => {
               <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">Click the button below to allow reminders.</p>
               <button
                 onClick={requestPermission}
-                className="mt-4 w-full bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-lg shadow-cyan-500/30"
+                className="mt-4 w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-lg shadow-amber-500/40"
               >
                 Enable Notifications
               </button>
@@ -222,17 +222,17 @@ const PlanCard: React.FC<{
 }> = ({ plan, isCurrent }) => {
     const isPro = plan.id === 'pro';
     const cardClasses = isCurrent
-        ? `bg-gradient-to-br from-cyan-500 to-cyan-700 text-white shadow-xl shadow-cyan-500/30`
+        ? `bg-gradient-to-br from-amber-500 to-amber-600 text-white shadow-xl shadow-amber-500/40`
         : `bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-white/10 shadow-lg shadow-black/20`;
 
     const buttonClasses = isCurrent
-        ? `w-full mt-8 bg-white text-cyan-600 font-bold py-3 px-4 rounded-lg transition-colors cursor-default`
-        : `w-full mt-8 bg-cyan-500 text-white font-bold py-3 px-4 rounded-lg transition-colors disabled:opacity-70 disabled:cursor-not-allowed`;
+        ? `w-full mt-8 bg-white text-amber-600 font-bold py-3 px-4 rounded-lg transition-colors cursor-default`
+        : `w-full mt-8 bg-amber-500 text-white font-bold py-3 px-4 rounded-lg transition-colors disabled:opacity-70 disabled:cursor-not-allowed`;
     
     return (
         <div className={`p-6 rounded-2xl flex flex-col ${cardClasses}`}>
             <h3 className="text-2xl font-bold">{plan.name}</h3>
-            <p className={isCurrent ? 'mt-1 text-cyan-100' : 'mt-1 text-slate-500 dark:text-slate-400'}>{plan.description}</p>
+            <p className={isCurrent ? 'mt-1 text-amber-100' : 'mt-1 text-slate-500 dark:text-slate-400'}>{plan.description}</p>
             <div className="my-6 text-4xl font-extrabold">
                 {plan.price}
             </div>
@@ -283,14 +283,14 @@ const PlanSettings: React.FC<{ onBack: () => void; hasPlan: boolean }> = ({ onBa
         </header>
         <div className="p-6 pt-0">
             {hasPlan ? (
-                <div className="bg-gradient-to-br from-cyan-500 to-cyan-700 rounded-2xl p-6 text-white shadow-xl shadow-cyan-500/30">
+                <div className="bg-gradient-to-br from-amber-500 to-amber-600 rounded-2xl p-6 text-white shadow-xl shadow-amber-500/40">
                     <div className="flex justify-between items-start">
                     <h3 className="text-2xl font-bold">Zenith Pro</h3>
                     <span className="bg-white/30 text-white text-xs font-semibold px-3 py-1 rounded-full">Active</span>
                     </div>
-                    <p className="mt-2 text-cyan-100">You have access to all premium features.</p>
+                    <p className="mt-2 text-amber-100">You have access to all premium features.</p>
                     
-                    <ul className="mt-6 space-y-3 text-cyan-50 border-t border-white/20 pt-6">
+                    <ul className="mt-6 space-y-3 text-amber-50 border-t border-white/20 pt-6">
                     <li className="flex items-center">
                         <span className="w-5 h-5 mr-3"><SmallCheckIcon /></span>
                         <span>Unlimited Task Creation</span>
@@ -307,7 +307,7 @@ const PlanSettings: React.FC<{ onBack: () => void; hasPlan: boolean }> = ({ onBa
             
                     <button 
                         onClick={() => setView('explore')}
-                        className="w-full mt-8 bg-white text-cyan-600 font-bold py-3 px-4 rounded-lg transition-colors"
+                        className="w-full mt-8 bg-white text-amber-600 font-bold py-3 px-4 rounded-lg transition-colors"
                     >
                         Manage Subscription
                     </button>
@@ -321,7 +321,7 @@ const PlanSettings: React.FC<{ onBack: () => void; hasPlan: boolean }> = ({ onBa
                     </p>
                     <button 
                       onClick={() => setView('explore')}
-                      className="w-full mt-6 bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-3 px-4 rounded-lg transition-colors"
+                      className="w-full mt-6 bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-lg transition-colors"
                     >
                       Explore Plans
                     </button>
@@ -369,7 +369,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ theme, setTheme }) => {
                                         aria-label={`Open ${item.label} settings`}
                                     >
                                     <div className="flex items-center">
-                                        <div className="text-cyan-500 dark:text-cyan-400">{item.icon}</div>
+                                        <div className="text-amber-500 dark:text-amber-400">{item.icon}</div>
                                         <div className="ml-4">
                                         <p className="font-bold text-slate-900 dark:text-white text-lg">{item.label}</p>
                                         <p className="text-sm text-slate-500 dark:text-slate-400">{item.description}</p>
@@ -388,7 +388,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ theme, setTheme }) => {
   };
 
   return (
-    <div>
+    <div className="pb-32">
       <div className="w-full max-w-md mx-auto">
         {renderContent()}
       </div>

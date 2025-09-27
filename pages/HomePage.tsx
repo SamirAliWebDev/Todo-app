@@ -156,7 +156,7 @@ const HomePage: React.FC<HomePageProps> = ({ tasks }) => {
     <>
         <div className="p-6 flex flex-col h-full text-center space-y-8">
             <header className="content-fade-in-active" style={{ animationDelay: '100ms' }}>
-                <p className="text-xl font-semibold text-cyan-400">{greeting}</p>
+                <p className="text-xl font-semibold text-amber-400 dark:text-glow-amber">{greeting}</p>
                 <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white mt-1">Welcome to Zenith</h1>
                 <p className="text-slate-500 dark:text-slate-400 mt-2">{formattedDate}</p>
             </header>
@@ -168,8 +168,8 @@ const HomePage: React.FC<HomePageProps> = ({ tasks }) => {
 
             <footer className="content-fade-in-active mt-auto" style={{ animationDelay: '300ms' }}>
                 <blockquote className="italic">
-                <p className="text-cyan-800 dark:text-cyan-200">"{dailyQuote.text}"</p>
-                <cite className="text-cyan-700 dark:text-cyan-300 not-italic block mt-2">- {dailyQuote.author}</cite>
+                <p className="text-amber-800 dark:text-amber-200">"{dailyQuote.text}"</p>
+                <cite className="text-amber-700 dark:text-amber-300 not-italic block mt-2">- {dailyQuote.author}</cite>
                 </blockquote>
             </footer>
         </div>

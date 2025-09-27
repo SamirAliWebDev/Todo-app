@@ -100,7 +100,7 @@ const VerticalTimePicker: React.FC<{
     return (
         <div className="relative flex justify-center items-center h-48 bg-slate-200/50 dark:bg-slate-700/50 rounded-lg select-none">
             {/* Selection Indicator */}
-            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-12 bg-cyan-500/10 border-y-2 border-cyan-500/50 z-0 pointer-events-none" />
+            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-12 bg-amber-500/10 border-y-2 border-amber-500/50 z-0 pointer-events-none" />
 
             <TimeScrollerColumn values={hours} selectedValue={hour} onValueChange={onHourChange} />
             <div className="text-4xl font-bold text-slate-400 dark:text-slate-500 pb-2">:</div>
@@ -151,7 +151,7 @@ const CategoryPickerModal: React.FC<CategoryPickerModalProps> = ({ onClose, onSe
                             onClick={() => handleIconSelect(cat.id)}
                             title={cat.label}
                             aria-label={`Select category: ${cat.label}`}
-                            className={`flex justify-center items-center p-1 rounded-full transition-all duration-200 focus:outline-none ${currentCategory.type === 'icon' && currentCategory.value === cat.id ? 'ring-2 ring-offset-2 ring-cyan-500 ring-offset-slate-100 dark:ring-offset-slate-800' : ''}`}
+                            className={`flex justify-center items-center p-1 rounded-full transition-all duration-200 focus:outline-none ${currentCategory.type === 'icon' && currentCategory.value === cat.id ? 'ring-2 ring-offset-2 ring-amber-500 ring-offset-slate-100 dark:ring-offset-slate-800' : ''}`}
                         >
                             <CategoryDisplay category={{type: 'icon', value: cat.id}} className="w-9 h-9" />
                         </button>
@@ -168,13 +168,13 @@ const CategoryPickerModal: React.FC<CategoryPickerModalProps> = ({ onClose, onSe
                         value={emojiInput}
                         onChange={handleEmojiChange}
                         placeholder="e.g., 🎉 or Urgent"
-                        className="w-full px-4 py-3 bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-white text-center text-lg rounded-lg focus:ring-cyan-500 focus:border-cyan-500 transition placeholder:text-slate-400"
+                        className="w-full px-4 py-3 bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-white text-center text-lg rounded-lg focus:ring-amber-500 focus:border-amber-500 transition placeholder:text-slate-400"
                     />
                 </div>
 
                 <button
                     onClick={onClose}
-                    className="w-full mt-6 bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-3 px-4 rounded-lg transition-colors"
+                    className="w-full mt-6 bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-lg transition-colors"
                 >
                     Done
                 </button>
@@ -327,7 +327,7 @@ const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAdd
           </button>
         </header>
         
-        <div className="p-6 pt-0 flex-grow flex flex-col overflow-y-auto scrollbar-hide">
+        <div className="p-6 pt-0 pb-32 flex-grow flex flex-col overflow-y-auto scrollbar-hide">
           <form onSubmit={handleSubmit} className="flex-grow flex flex-col space-y-6">
             <div>
               <label htmlFor="task-title" className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">
@@ -343,7 +343,7 @@ const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAdd
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="e.g., Finish project report"
-                    className="w-full pl-12 pr-4 py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 transition placeholder:text-slate-500 dark:placeholder:text-slate-400"
+                    className="w-full pl-12 pr-4 py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-amber-500 focus:border-amber-500 transition placeholder:text-slate-500 dark:placeholder:text-slate-400"
                     required
                 />
               </div>
@@ -359,7 +359,7 @@ const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAdd
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Add more details about your task..."
-                className="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 transition placeholder:text-slate-500 dark:placeholder:text-slate-400"
+                className="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-amber-500 focus:border-amber-500 transition placeholder:text-slate-500 dark:placeholder:text-slate-400"
               ></textarea>
             </div>
             
@@ -370,7 +370,7 @@ const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAdd
               <button
                   type="button"
                   onClick={() => setIsCategoryModalOpen(true)}
-                  className="w-full flex items-center justify-between text-left px-4 py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 transition"
+                  className="w-full flex items-center justify-between text-left px-4 py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-amber-500 focus:border-amber-500 transition"
               >
                   <div className="flex items-center">
                       <CategoryDisplay category={category} className="w-6 h-6 mr-3" />
@@ -424,7 +424,7 @@ const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAdd
                                   onClick={() => setReminderTime(time)}
                                   className={`p-3 rounded-lg border-2 flex flex-col items-center justify-center text-sm font-semibold transition-all duration-200 h-20 ${
                                       isActive
-                                          ? 'bg-cyan-500/20 border-cyan-500 text-cyan-600 dark:text-cyan-400'
+                                          ? 'bg-amber-500/20 border-amber-500 text-amber-600 dark:text-amber-400'
                                           : 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-500'
                                   }`}
                               >
@@ -448,7 +448,7 @@ const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAdd
             <div className="mt-auto pt-4">
               <button 
                 type="submit"
-                className="w-full bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-4 px-4 rounded-lg transition-colors shadow-lg shadow-cyan-500/30"
+                className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-4 px-4 rounded-lg transition-colors shadow-lg shadow-amber-500/40"
               >
                 {isEditing ? 'Save Changes' : 'Create Task'}
               </button>

@@ -173,7 +173,7 @@ export const LineChart: React.FC<{ data: ChartDataItem[] }> = ({ data }) => {
             {canDrawLine && (
                  <polyline
                     fill="none"
-                    stroke="#06b6d4"
+                    stroke="#f59e0b"
                     strokeWidth="3"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -191,7 +191,7 @@ export const LineChart: React.FC<{ data: ChartDataItem[] }> = ({ data }) => {
                             cy={y} 
                             r="5" 
                             className="fill-white dark:fill-slate-800"
-                            stroke="#06b6d4" 
+                            stroke="#f59e0b" 
                             strokeWidth="2" 
                         />
                         <text x={x} y={chartHeight - padding.bottom + 15} textAnchor="middle" fontSize="10" className="fill-slate-500 dark:fill-slate-400">{item.label}</text>

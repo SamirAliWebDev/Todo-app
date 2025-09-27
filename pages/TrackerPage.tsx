@@ -86,7 +86,7 @@ const GraphDisplay: React.FC<{
             return {
                 label,
                 value: completedTasksPerDay.get(dateString) || 0,
-                color: '#06b6d4',
+                color: '#f59e0b', // amber-500
             };
         });
       }
@@ -199,7 +199,7 @@ const GraphOptionsModal: React.FC<{
                 <button
                   key={id}
                   onClick={() => onSelectAnalysis(id)}
-                  className="w-full text-left p-4 rounded-lg font-semibold transition-colors duration-200 bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-600 hover:bg-cyan-500/20 hover:border-cyan-500/50 hover:text-cyan-400"
+                  className="w-full text-left p-4 rounded-lg font-semibold transition-colors duration-200 bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-600 hover:bg-amber-500/20 hover:border-amber-500/50 hover:text-amber-400"
                 >
                   {label}
                 </button>
@@ -209,7 +209,7 @@ const GraphOptionsModal: React.FC<{
                 <button
                     key={id}
                     onClick={() => onSelectGraphType(id)}
-                    className="w-full flex items-center p-4 rounded-lg font-semibold transition-colors duration-200 bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-600 hover:bg-cyan-500/20 hover:border-cyan-500/50 hover:text-cyan-400"
+                    className="w-full flex items-center p-4 rounded-lg font-semibold transition-colors duration-200 bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-600 hover:bg-amber-500/20 hover:border-amber-500/50 hover:text-amber-400"
                 >
                     {icon}
                     {label}
@@ -262,7 +262,7 @@ const TrackerPage: React.FC<TrackerPageProps> = ({ tasks, generatedGraphs, onGen
 
   return (
     <>
-      <div className="p-6">
+      <div className="p-6 pb-32">
         <header className="text-center mb-6">
             <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white">Tracker</h1>
             <p className="text-slate-500 dark:text-slate-400 mt-1">Track your progress and productivity.</p>
@@ -277,7 +277,7 @@ const TrackerPage: React.FC<TrackerPageProps> = ({ tasks, generatedGraphs, onGen
                 <button
                     onClick={openModal}
                     disabled={!canAddGraph}
-                    className="w-full flex items-center justify-center bg-gradient-to-br from-cyan-500 to-cyan-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg shadow-cyan-500/30 transition-all active:scale-100 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
+                    className="w-full flex items-center justify-center bg-gradient-to-br from-amber-500 to-amber-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg shadow-amber-500/40 transition-all active:scale-100 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
                 >
                     <GraphIcon />
                     {canAddGraph ? 'Generate Graph' : 'Graph Limit Reached (4)'}

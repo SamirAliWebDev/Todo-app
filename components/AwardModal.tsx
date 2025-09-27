@@ -17,7 +17,7 @@ const AwardModal: React.FC<AwardModalProps> = ({ onClose, title, message }) => {
         const style: React.CSSProperties = {
             left: `${Math.random() * 100}%`,
             animation: `confetti-fall ${1 + Math.random() * 2}s ${Math.random() * 2}s linear infinite`,
-            backgroundColor: ['#06b6d4', '#f59e0b', '#10b981', '#ef4444'][Math.floor(Math.random() * 4)],
+            backgroundColor: ['#f59e0b', '#fbbf24', '#fcd34d', '#fde68a'][Math.floor(Math.random() * 4)], // Gold/amber tones
             transform: `rotate(${Math.random() * 360}deg)`,
         };
         return <ConfettiPiece key={i} style={style} />;
@@ -46,7 +46,7 @@ const AwardModal: React.FC<AwardModalProps> = ({ onClose, title, message }) => {
         </p>
         <button
           onClick={onClose}
-          className="w-full mt-8 bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-lg shadow-cyan-500/30"
+          className="w-full mt-8 bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-lg shadow-amber-500/40"
         >
           Awesome!
         </button>

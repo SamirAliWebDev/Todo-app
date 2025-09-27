@@ -113,7 +113,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onToggle, onDelete, onEdit, i
         className={`
           absolute left-4 top-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full 
           ring-4 ring-slate-100 dark:ring-slate-800 flex items-center justify-center transition-colors duration-200 z-20
-          ${task.completed ? 'bg-cyan-500' : priorityStyles[task.priority]}
+          ${task.completed ? 'bg-amber-500' : priorityStyles[task.priority]}
         `}
       >
         {task.completed && <SmallCheckIcon />}
@@ -131,7 +131,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onToggle, onDelete, onEdit, i
         <button
           onClick={handleEdit}
           style={{ pointerEvents: revealProgress > 0.9 ? 'auto' : 'none' }}
-          className="w-14 h-14 rounded-full bg-cyan-500 hover:bg-cyan-600 text-white flex items-center justify-center transition-all duration-100 shadow-md"
+          className="w-14 h-14 rounded-full bg-amber-500 hover:bg-amber-600 text-white flex items-center justify-center transition-all duration-100 shadow-md"
           aria-label={`Edit task: ${task.title}`}
           tabIndex={revealProgress > 0.9 ? 0 : -1}
         >

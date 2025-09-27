@@ -59,10 +59,10 @@ const DateCarousel: React.FC<DateCarouselProps> = ({ selectedDate, onDateSelect 
                             flex-shrink-0 w-14 h-20 rounded-xl p-2 flex flex-col items-center justify-center transition-all duration-300
                             date-item-animate
                             ${isSelected
-                                ? 'bg-cyan-500 text-white shadow-lg shadow-cyan-500/30'
+                                ? 'bg-amber-500 text-white shadow-lg shadow-amber-500/40'
                                 : 'bg-slate-200/80 dark:bg-slate-800/60 hover:bg-slate-300/80 dark:hover:bg-slate-700/60 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-white/10 shadow-md shadow-black/20'
                             }
-                            ${isToday && !isSelected ? 'ring-2 ring-offset-2 ring-offset-white/90 dark:ring-offset-slate-800/90 ring-cyan-500' : ''}
+                            ${isToday && !isSelected ? 'ring-2 ring-offset-2 ring-offset-white/90 dark:ring-offset-slate-800/90 ring-amber-500' : ''}
                         `}
                         style={{ animationDelay: `${(index - 30) * 20}ms` }}
                     >
@@ -139,10 +139,10 @@ const TasksPage: React.FC<TasksPageProps> = ({ tasks, onToggleTask, onDeleteTask
         } else if (selected.getTime() === yesterday.getTime()) {
             dayName = "Yesterday";
         } else {
-            dayName = selected.toLocaleDateString('en-US', { weekday: 'long' });
+            dayName = selected.toLocaleString('en-US', { weekday: 'long' });
         }
         
-        const fullDate = selected.toLocaleDateString('en-US', {
+        const fullDate = selected.toLocaleString('en-US', {
             month: 'long',
             day: 'numeric',
             year: selected.getFullYear() !== today.getFullYear() ? 'numeric' : undefined,
@@ -156,7 +156,7 @@ const TasksPage: React.FC<TasksPageProps> = ({ tasks, onToggleTask, onDeleteTask
             <Header title={headerInfo.dayName} subtitle={headerInfo.fullDate}>
                 <DateCarousel selectedDate={selectedDate} onDateSelect={onDateSelect} />
             </Header>
-            <div className="flex-grow px-6 pt-8 pb-40">
+            <div className="flex-grow px-6 pt-8 pb-32">
                 {filteredTasks.length === 0 ? (
                      <div className="flex items-center justify-center h-full">
                         <p className="text-slate-500 dark:text-slate-400">
