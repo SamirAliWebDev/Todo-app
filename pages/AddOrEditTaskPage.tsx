@@ -327,7 +327,7 @@ const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAdd
           </button>
         </header>
         
-        <div className="p-6 pt-0 pb-32 flex-grow flex flex-col overflow-y-auto scrollbar-hide">
+        <div className="p-6 pt-0 flex-grow flex flex-col overflow-y-auto scrollbar-hide">
           <form onSubmit={handleSubmit} className="flex-grow flex flex-col space-y-6">
             <div>
               <label htmlFor="task-title" className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">

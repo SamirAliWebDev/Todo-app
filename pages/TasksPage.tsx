@@ -139,10 +139,10 @@ const TasksPage: React.FC<TasksPageProps> = ({ tasks, onToggleTask, onDeleteTask
         } else if (selected.getTime() === yesterday.getTime()) {
             dayName = "Yesterday";
         } else {
-            dayName = selected.toLocaleString('en-US', { weekday: 'long' });
+            dayName = selected.toLocaleDateString('en-US', { weekday: 'long' });
         }
         
-        const fullDate = selected.toLocaleString('en-US', {
+        const fullDate = selected.toLocaleDateString('en-US', {
             month: 'long',
             day: 'numeric',
             year: selected.getFullYear() !== today.getFullYear() ? 'numeric' : undefined,
@@ -156,7 +156,7 @@ const TasksPage: React.FC<TasksPageProps> = ({ tasks, onToggleTask, onDeleteTask
             <Header title={headerInfo.dayName} subtitle={headerInfo.fullDate}>
                 <DateCarousel selectedDate={selectedDate} onDateSelect={onDateSelect} />
             </Header>
-            <div className="flex-grow px-6 pt-8 pb-32">
+            <div className="flex-grow px-6 pt-8 pb-40">
                 {filteredTasks.length === 0 ? (
                      <div className="flex items-center justify-center h-full">
                         <p className="text-slate-500 dark:text-slate-400">

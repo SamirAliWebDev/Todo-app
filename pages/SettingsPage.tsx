@@ -388,7 +388,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ theme, setTheme }) => {
   };
 
   return (
-    <div className="pb-32">
+    <div>
       <div className="w-full max-w-md mx-auto">
         {renderContent()}
       </div>

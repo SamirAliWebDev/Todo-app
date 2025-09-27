@@ -32,15 +32,14 @@ const getExitAnimationClass = (page: Page) => {
 const getEnterDuration = (page: Page) => {
   switch (page) {
     case 'Home': return 500;
-    case 'Add': return 300;
-    default: return 200;
+    case 'Add': return 400;
+    default: return 300;
   }
 };
 const getExitDuration = (page: Page) => {
   switch (page) {
-    case 'Home': return 150;
-    case 'Add': return 200;
-    default: return 100;
+    case 'Add': return 300;
+    default: return 150;
   }
 };
 
