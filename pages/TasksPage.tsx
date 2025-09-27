@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef, useEffect } from 'react';
 import type { Task, Priority } from '../types';
 import TaskItem from '../components/TaskItem';
 import Header from '../components/Header';
@@ -18,37 +18,55 @@ interface DateCarouselProps {
 const DateCarousel: React.FC<DateCarouselProps> = ({ selectedDate, onDateSelect }) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    const carouselRef = useRef<HTMLDivElement>(null);
 
     const dates = useMemo(() => {
-        return Array.from({ length: 14 }, (_, i) => {
-            const date = new Date(today);
-            date.setDate(today.getDate() + i);
-            return date;
-        });
+        const dateArray: Date[] = [];
+        // Generate a range of dates: 30 days past, today, 30 days future
+        for (let i = -30; i <= 30; i++) {
+            const date = new Date();
+            date.setHours(0, 0, 0, 0);
+            date.setDate(date.getDate() + i);
+            dateArray.push(date);
+        }
+        return dateArray;
     }, []);
 
+    useEffect(() => {
+        if (carouselRef.current) {
+            const todayElement = carouselRef.current.querySelector('[data-is-today="true"]');
+            if (todayElement) {
+                // Instantly scroll to center today's date on initial load.
+                todayElement.scrollIntoView({ behavior: 'auto', inline: 'center', block: 'nearest' });
+            }
+        }
+    }, []); // Empty dependency array ensures this runs only once on mount
+
     return (
-        <div className="flex space-x-3 overflow-x-auto scrollbar-hide md:justify-center">
+        <div ref={carouselRef} className="flex space-x-3 overflow-x-auto scrollbar-hide md:justify-center px-4 py-2">
             {dates.map((date, index) => {
                 const day = date.toLocaleString('en-US', { weekday: 'short' }).toUpperCase();
                 const dayOfMonth = date.getDate();
                 const isSelected = isSameDay(selectedDate, date);
+                const isToday = isSameDay(today, date);
 
                 return (
                     <button
                         key={date.toISOString()}
                         onClick={() => onDateSelect(date)}
+                        data-is-today={isToday}
                         className={`
-                            flex-shrink-0 w-16 h-20 rounded-xl p-2 flex flex-col items-center justify-center transition-all duration-300
+                            flex-shrink-0 w-14 h-20 rounded-xl p-2 flex flex-col items-center justify-center transition-all duration-300
                             date-item-animate
                             ${isSelected
                                 ? 'bg-cyan-500 text-white shadow-lg shadow-cyan-500/30'
                                 : 'bg-slate-200/80 dark:bg-slate-800/60 hover:bg-slate-300/80 dark:hover:bg-slate-700/60 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-white/10 shadow-md shadow-black/20'
                             }
+                            ${isToday && !isSelected ? 'ring-2 ring-offset-2 ring-offset-white/90 dark:ring-offset-slate-800/90 ring-cyan-500' : ''}
                         `}
-                        style={{ animationDelay: `${index * 50}ms` }}
+                        style={{ animationDelay: `${(index - 30) * 20}ms` }}
                     >
-                        <span className="text-xs font-semibold">{day}</span>
+                        <span className="text-sm font-semibold">{day}</span>
                         <span className="text-2xl font-bold mt-1">{dayOfMonth}</span>
                     </button>
                 );
@@ -75,21 +93,22 @@ const TasksPage: React.FC<TasksPageProps> = ({ tasks, onToggleTask, onDeleteTask
             'Low': 3,
         };
 
-        return tasks
-            .filter(task => isSameDay(task.date, selectedDate))
-            .sort((a, b) => {
-                // 1. Sort by completion status (incomplete tasks first)
-                if (a.completed !== b.completed) {
-                    return a.completed ? 1 : -1;
-                }
-                // 2. Sort by priority (High > Medium > Low)
-                const priorityComparison = priorityOrder[a.priority] - priorityOrder[b.priority];
-                if (priorityComparison !== 0) {
-                    return priorityComparison;
-                }
-                // 3. Sort by creation time (older tasks first)
-                return Number(a.id) - Number(b.id);
-            });
+        const tasksToProcess = tasks.filter(task => isSameDay(task.date, selectedDate));
+
+        return tasksToProcess.sort((a, b) => {
+            // 1. Sort by completion status (incomplete tasks first)
+            if (a.completed !== b.completed) {
+                return a.completed ? 1 : -1;
+            }
+            
+            // 2. Sort by priority (High > Medium > Low)
+            const priorityComparison = priorityOrder[a.priority] - priorityOrder[b.priority];
+            if (priorityComparison !== 0) {
+                return priorityComparison;
+            }
+            // 3. Sort by creation time (older tasks first)
+            return Number(a.id) - Number(b.id);
+        });
     }, [tasks, selectedDate]);
     
     const isTodaySelected = useMemo(() => {
@@ -104,6 +123,9 @@ const TasksPage: React.FC<TasksPageProps> = ({ tasks, onToggleTask, onDeleteTask
 
         const tomorrow = new Date(today);
         tomorrow.setDate(today.getDate() + 1);
+        
+        const yesterday = new Date(today);
+        yesterday.setDate(today.getDate() - 1);
 
         // Ensure selectedDate is also normalized to the start of the day for accurate comparison
         const selected = new Date(selectedDate);
@@ -114,6 +136,8 @@ const TasksPage: React.FC<TasksPageProps> = ({ tasks, onToggleTask, onDeleteTask
             dayName = "Today";
         } else if (selected.getTime() === tomorrow.getTime()) {
             dayName = "Tomorrow";
+        } else if (selected.getTime() === yesterday.getTime()) {
+            dayName = "Yesterday";
         } else {
             dayName = selected.toLocaleDateString('en-US', { weekday: 'long' });
         }
@@ -121,6 +145,7 @@ const TasksPage: React.FC<TasksPageProps> = ({ tasks, onToggleTask, onDeleteTask
         const fullDate = selected.toLocaleDateString('en-US', {
             month: 'long',
             day: 'numeric',
+            year: selected.getFullYear() !== today.getFullYear() ? 'numeric' : undefined,
         });
 
         return { dayName, fullDate };
@@ -131,11 +156,13 @@ const TasksPage: React.FC<TasksPageProps> = ({ tasks, onToggleTask, onDeleteTask
             <Header title={headerInfo.dayName} subtitle={headerInfo.fullDate}>
                 <DateCarousel selectedDate={selectedDate} onDateSelect={onDateSelect} />
             </Header>
-            <div className="flex-grow p-6">
+            <div className="flex-grow px-6 pt-8 pb-40">
                 {filteredTasks.length === 0 ? (
                      <div className="flex items-center justify-center h-full">
                         <p className="text-slate-500 dark:text-slate-400">
-                            {isTodaySelected ? "No tasks for today. Add one!" : "No tasks for this day."}
+                           {isTodaySelected 
+                                ? "No tasks for today. Add one!" 
+                                : "No tasks for this day."}
                         </p>
                     </div>
                 ) : (

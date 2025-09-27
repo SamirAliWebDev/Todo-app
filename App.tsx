@@ -154,7 +154,7 @@ const App: React.FC = () => {
 
   const [animationClass, setAnimationClass] = useState<string>(getEnterAnimationClass('Home'));
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(() => {
+  const [selectedDate, setSelectedDate] = useState<Date>(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return today;
