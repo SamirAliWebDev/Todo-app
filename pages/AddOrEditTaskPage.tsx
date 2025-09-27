@@ -231,7 +231,7 @@ const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAdd
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState<Priority>('Medium');
-  const [reminderTime, setReminderTime] = useState('');
+  const [reminderTime, setReminderTime] = useState('09:00'); // Default to 9:00 AM
   const [category, setCategory] = useState<TaskCategory>({ type: 'icon', value: 'Personal' });
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
@@ -309,15 +309,20 @@ const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAdd
               <label htmlFor="task-title" className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">
                 Task Title
               </label>
-              <input
-                type="text"
-                id="task-title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="e.g., Finish project report"
-                className="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800/40 text-slate-900 dark:text-white backdrop-blur-sm border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 transition placeholder:text-slate-500 dark:placeholder:text-slate-400"
-                required
-              />
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <CategoryDisplay category={category} className="w-6 h-6" />
+                </div>
+                <input
+                    type="text"
+                    id="task-title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="e.g., Finish project report"
+                    className="w-full pl-12 pr-4 py-3 bg-slate-100 dark:bg-slate-800/40 text-slate-900 dark:text-white backdrop-blur-sm border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 transition placeholder:text-slate-500 dark:placeholder:text-slate-400"
+                    required
+                />
+              </div>
             </div>
             
             <div>

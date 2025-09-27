@@ -49,8 +49,8 @@ export const SmallCheckIcon: React.FC = () => (
     </svg>
 );
 
-export const ClockIcon: React.FC = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+export const ClockIcon: React.FC<{ className?: string }> = ({ className = "h-8 w-8" }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
 );
@@ -202,7 +202,7 @@ export const HeartIcon: React.FC<{className?: string}> = ({ className }) => (
 );
 
 export const DumbbellIcon: React.FC<{className?: string}> = ({ className }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+    <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M5 11h14M5 11a2 2 0 11-4 0 2 2 0 014 0zm14 0a2 2 0 104 0 2 2 0 00-4 0zM5.121 15.121A3 3 0 013 12.828V11.172a3 3 0 012.121-2.121M18.879 8.879A3 3 0 0121 11.172v1.656a3 3 0 01-2.121 2.121" />
     </svg>
 );

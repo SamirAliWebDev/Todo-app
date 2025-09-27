@@ -1,12 +1,26 @@
 import React, { useState } from 'react';
 import type { Task } from '../types';
-import { TrashIcon, SmallCheckIcon } from './Icons';
+import { TrashIcon, SmallCheckIcon, ClockIcon, FlagIcon } from './Icons';
 import { CategoryDisplay } from '../lib/categories';
 
 const priorityStyles: { [key in Task['priority']]: string } = {
   Low: 'bg-green-400',
   Medium: 'bg-yellow-400',
   High: 'bg-red-500',
+};
+
+const priorityTextStyles: { [key in Task['priority']]: string } = {
+  Low: 'text-green-600 dark:text-green-400',
+  Medium: 'text-yellow-600 dark:text-yellow-400',
+  High: 'text-red-600 dark:text-red-500',
+};
+
+const formatTime12h = (time24: string): string => {
+    if (!time24) return '';
+    const [hours, minutes] = time24.split(':').map(Number);
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const hours12 = hours % 12 || 12; // Converts 0 to 12
+    return `${hours12}:${minutes.toString().padStart(2, '0')} ${period}`;
 };
 
 interface TaskItemProps {
@@ -67,6 +81,19 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onToggle, onDelete, index }) 
             </p>
           </div>
           {task.description && <p className="text-sm text-slate-500 dark:text-slate-400 truncate mt-1 pl-9">{task.description}</p>}
+          
+          <div className="flex items-center space-x-4 mt-2 pl-9 text-xs">
+            {task.reminderTime && (
+              <div className="flex items-center text-slate-500 dark:text-slate-400">
+                <ClockIcon className="h-4 w-4 mr-1.5" />
+                <span>{formatTime12h(task.reminderTime)}</span>
+              </div>
+            )}
+            <div className={`flex items-center font-medium ${priorityTextStyles[task.priority]}`}>
+              <FlagIcon className="h-4 w-4 mr-1.5" />
+              <span>{task.priority}</span>
+            </div>
+          </div>
         </div>
         <button
           onClick={handleDelete}
