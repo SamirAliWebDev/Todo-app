@@ -32,136 +32,80 @@ const formatTime = (hour: string, minute: string, period: 'AM' | 'PM'): string =
     return `${String(h).padStart(2, '0')}:${minute}`;
 };
 
-const AnalogClockPicker: React.FC<{
-    hour: number;
-    minute: number;
-    mode: 'hour' | 'minute';
-    onHourChange: (hour: number) => void;
-    onMinuteChange: (minute: number) => void;
-    setMode: (mode: 'hour' | 'minute') => void;
-}> = ({ hour, minute, mode, onHourChange, onMinuteChange, setMode }) => {
-    const svgRef = useRef<SVGSVGElement>(null);
-    const isDragging = useRef(false);
+const TimeScrollerColumn: React.FC<{
+    values: string[];
+    selectedValue: string;
+    onValueChange: (value: string) => void;
+}> = ({ values, selectedValue, onValueChange }) => {
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const itemHeight = 48; // h-12 in Tailwind
+    const scrollTimeout = useRef<number | null>(null);
 
-    const hourAngle = (hour % 12) * 30 + minute * 0.5;
-    const minuteAngle = minute * 6;
-
-    const handleInteraction = (e: React.MouseEvent | React.TouchEvent) => {
-        e.preventDefault();
-        if (!svgRef.current) return;
-        const rect = svgRef.current.getBoundingClientRect();
-
-        const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
-        const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
-
-        const svgX = clientX - rect.left;
-        const svgY = clientY - rect.top;
-
-        const x = (svgX / rect.width) * 200;
-        const y = (svgY / rect.height) * 200;
-
-        const angleRad = Math.atan2(y - 100, x - 100);
-        let angleDeg = (angleRad * 180 / Math.PI + 90 + 360) % 360;
-
-        if (mode === 'hour') {
-            let selectedHour = Math.round(angleDeg / 30);
-            if (selectedHour === 0) selectedHour = 12;
-            onHourChange(selectedHour);
-            setTimeout(() => setMode('minute'), 100); // Short delay before switching
-        } else {
-            let selectedMinute = Math.round(angleDeg / 6) % 60;
-            onMinuteChange(selectedMinute);
+    // Effect to scroll the selected value into view when it changes from props
+    useEffect(() => {
+        const selectedIndex = values.indexOf(selectedValue);
+        if (selectedIndex !== -1 && scrollRef.current) {
+            scrollRef.current.scrollTo({ top: selectedIndex * itemHeight, behavior: 'smooth' });
         }
-    };
+    }, [selectedValue, values]);
 
-    const handleMouseDown = (e: React.MouseEvent) => {
-        isDragging.current = true;
-        handleInteraction(e);
-    };
-
-    const handleMouseMove = (e: React.MouseEvent) => {
-        if (isDragging.current) {
-            handleInteraction(e);
+    const handleScroll = () => {
+        if (scrollTimeout.current) {
+            clearTimeout(scrollTimeout.current);
         }
+        scrollTimeout.current = window.setTimeout(() => {
+            if (scrollRef.current) {
+                const centerIndex = Math.round(scrollRef.current.scrollTop / itemHeight);
+                const newValue = values[centerIndex];
+                if (newValue && newValue !== selectedValue) {
+                    onValueChange(newValue);
+                }
+            }
+        }, 150); // Debounce time after scrolling stops
     };
 
-    const handleMouseUp = () => {
-        isDragging.current = false;
-    };
-
-    const handleTouchStart = (e: React.TouchEvent) => {
-        isDragging.current = true;
-        handleInteraction(e);
-    };
-
-    const handleTouchMove = (e: React.TouchEvent) => {
-        if (isDragging.current) {
-            handleInteraction(e);
-        }
-    };
-    
     return (
-        <div className="relative w-full aspect-square max-w-[250px] mx-auto select-none">
-            <svg
-                ref={svgRef}
-                viewBox="0 0 200 200"
-                className="w-full h-full cursor-pointer"
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
-                onMouseLeave={handleMouseUp}
-                onTouchStart={handleTouchStart}
-                onTouchMove={handleTouchMove}
-                onTouchEnd={() => isDragging.current = false}
-            >
-                {/* Clock Face */}
-                <circle cx="100" cy="100" r="98" className="fill-slate-100 dark:fill-slate-800/60" />
-                <circle cx="100" cy="100" r="98" className="stroke-slate-300 dark:stroke-slate-600/50" strokeWidth="1" fill="none" />
-                
-                {/* Numbers & Markers */}
-                {Array.from({ length: 12 }, (_, i) => {
-                    const h = i + 1;
-                    const angle = (h * 30 - 90) * (Math.PI / 180);
-                    const x = 100 + 85 * Math.cos(angle);
-                    const y = 100 + 85 * Math.sin(angle) + 5;
-                    const isSelected = mode === 'hour' && (hour === h || (hour === 0 || hour > 12) && (hour % 12) === h);
-                    return (
-                        <text
-                            key={`hour-${h}`}
-                            x={x}
-                            y={y}
-                            textAnchor="middle"
-                            className={`text-lg font-medium transition-colors ${isSelected ? 'fill-cyan-500 font-bold' : 'fill-slate-500 dark:fill-slate-400'}`}
-                        >
-                            {h}
-                        </text>
-                    )
-                })}
-                {Array.from({ length: 60 }, (_, i) => {
-                    const isFiveMinuteMark = i % 5 === 0;
-                    const isSelected = mode === 'minute' && minute === i;
-                    const angle = (i * 6 - 90) * (Math.PI / 180);
-                    const r = isSelected ? 4 : (isFiveMinuteMark ? 2 : 1);
-                    const x = 100 + 92 * Math.cos(angle);
-                    const y = 100 + 92 * Math.sin(angle);
-                    return <circle key={`min-${i}`} cx={x} cy={y} r={r} className={`transition-all ${isSelected ? 'fill-cyan-500' : 'fill-slate-300 dark:fill-slate-600'}`} />
-                })}
+        <div
+            ref={scrollRef}
+            onScroll={handleScroll}
+            className="h-48 w-24 overflow-y-scroll snap-y snap-mandatory scrollbar-hide time-picker-mask"
+        >
+            {/* Top and bottom padding to allow first/last items to center */}
+            <div style={{ height: '72px' }} />
+            {values.map((value) => (
+                <div
+                    key={value}
+                    className="h-12 flex items-center justify-center text-3xl font-bold snap-center text-slate-800 dark:text-slate-200"
+                >
+                    {value}
+                </div>
+            ))}
+            <div style={{ height: '72px' }} />
+        </div>
+    );
+};
 
-                {/* Hands */}
-                <line x1="100" y1="100" x2="100" y2="55"
-                    strokeWidth={mode === 'hour' ? 4 : 2}
-                    className={`stroke-linecap-round transition-all duration-300 ${mode === 'hour' ? 'stroke-cyan-500' : 'stroke-slate-500 dark:stroke-slate-400'}`}
-                    style={{ transform: `rotate(${hourAngle}deg)`, transformOrigin: 'center' }}
-                />
-                <line x1="100" y1="100" x2="100" y2="30"
-                    strokeWidth={mode === 'minute' ? 4 : 2}
-                    className={`stroke-linecap-round transition-all duration-300 ${mode === 'minute' ? 'stroke-cyan-500' : 'stroke-slate-400 dark:stroke-slate-500'}`}
-                    style={{ transform: `rotate(${minuteAngle}deg)`, transformOrigin: 'center' }}
-                />
+const VerticalTimePicker: React.FC<{
+    hour: string;
+    minute: string;
+    period: 'AM' | 'PM';
+    onHourChange: (hour: string) => void;
+    onMinuteChange: (minute: string) => void;
+    onPeriodChange: (period: 'AM' | 'PM') => void;
+}> = ({ hour, minute, period, onHourChange, onMinuteChange, onPeriodChange }) => {
+    const hours = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0'));
+    const minutes = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0'));
+    const periods = ['AM', 'PM'];
 
-                {/* Center dot */}
-                <circle cx="100" cy="100" r="4" className="fill-cyan-500" />
-            </svg>
+    return (
+        <div className="relative flex justify-center items-center h-48 bg-slate-200/50 dark:bg-slate-700/50 rounded-lg select-none">
+            {/* Selection Indicator */}
+            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-12 bg-cyan-500/10 border-y-2 border-cyan-500/50 z-0 pointer-events-none" />
+
+            <TimeScrollerColumn values={hours} selectedValue={hour} onValueChange={onHourChange} />
+            <div className="text-4xl font-bold text-slate-400 dark:text-slate-500 pb-2">:</div>
+            <TimeScrollerColumn values={minutes} selectedValue={minute} onValueChange={onMinuteChange} />
+            <TimeScrollerColumn values={periods} selectedValue={period} onValueChange={onPeriodChange as (value: string) => void} />
         </div>
     );
 };
@@ -291,32 +235,41 @@ const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAdd
   const [category, setCategory] = useState<TaskCategory>({ type: 'icon', value: 'Personal' });
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
-  // State for the time picker
+  // State for the time picker display
   const [hour, setHour] = useState('09');
   const [minute, setMinute] = useState('00');
   const [period, setPeriod] = useState<'AM' | 'PM'>('AM');
-  const [clockMode, setClockMode] = useState<'hour' | 'minute'>('hour');
-
-  // Sync from parent's reminderTime string to the picker's state
+  
+  // Sync from the main reminderTime string to the picker's state.
+  // This is needed for presets and clearing the time.
   useEffect(() => {
     if (reminderTime) {
       const { hour, minute, period } = parseTime(reminderTime);
       setHour(hour);
       setMinute(minute);
       setPeriod(period);
+    } else {
+      // Reset picker to a default state when reminder is cleared
+      setHour('09');
+      setMinute('00');
+      setPeriod('AM');
     }
   }, [reminderTime]);
 
-  // Sync from the picker's state back to the parent's reminderTime string
-  useEffect(() => {
-    if (reminderTime) {
-      const newTime = formatTime(hour, minute, period);
-      // This check prevents an infinite loop
-      if (newTime !== reminderTime) {
-        setReminderTime(newTime);
-      }
-    }
-  }, [hour, minute, period, reminderTime]);
+  const handleHourChange = (newHour: string) => {
+    setHour(newHour);
+    setReminderTime(formatTime(newHour, minute, period));
+  };
+  
+  const handleMinuteChange = (newMinute: string) => {
+    setMinute(newMinute);
+    setReminderTime(formatTime(hour, newMinute, period));
+  };
+  
+  const handlePeriodChange = (newPeriod: 'AM' | 'PM') => {
+    setPeriod(newPeriod);
+    setReminderTime(formatTime(hour, minute, newPeriod));
+  };
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -452,51 +405,14 @@ const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAdd
                           );
                       })}
                   </div>
-                  <div className="bg-slate-200/50 dark:bg-slate-700/50 rounded-lg p-4">
-                        <div className="flex items-center justify-center text-5xl font-bold text-slate-800 dark:text-slate-200 mb-4">
-                            <span
-                                onClick={() => setClockMode('hour')}
-                                className={`cursor-pointer p-2 rounded-lg transition-colors ${clockMode === 'hour' ? 'text-cyan-500 bg-cyan-500/10' : ''}`}
-                            >
-                                {hour}
-                            </span>
-                            <span className="text-slate-400 dark:text-slate-500">:</span>
-                            <span
-                                onClick={() => setClockMode('minute')}
-                                className={`cursor-pointer p-2 rounded-lg transition-colors ${clockMode === 'minute' ? 'text-cyan-500 bg-cyan-500/10' : ''}`}
-                            >
-                                {minute}
-                            </span>
-                        </div>
-
-                        <AnalogClockPicker
-                            hour={parseInt(hour)}
-                            minute={parseInt(minute)}
-                            mode={clockMode}
-                            onHourChange={h => setHour(String(h).padStart(2, '0'))}
-                            onMinuteChange={m => setMinute(String(m).padStart(2, '0'))}
-                            setMode={setClockMode}
-                        />
-
-                        <div className="flex justify-center space-x-2 mt-4">
-                            <button 
-                                type="button"
-                                onClick={() => setPeriod('AM')}
-                                aria-pressed={period === 'AM'}
-                                className={`px-4 py-2 text-lg font-bold rounded-md transition-colors w-20 ${period === 'AM' ? 'bg-cyan-500 text-white shadow-md' : 'bg-slate-300/70 dark:bg-slate-800/80 text-slate-500'}`}
-                            >
-                                AM
-                            </button>
-                            <button
-                                type="button" 
-                                onClick={() => setPeriod('PM')}
-                                aria-pressed={period === 'PM'}
-                                className={`px-4 py-2 text-lg font-bold rounded-md transition-colors w-20 ${period === 'PM' ? 'bg-cyan-500 text-white shadow-md' : 'bg-slate-300/70 dark:bg-slate-800/80 text-slate-500'}`}
-                            >
-                                PM
-                            </button>
-                        </div>
-                    </div>
+                  <VerticalTimePicker
+                    hour={hour}
+                    minute={minute}
+                    period={period}
+                    onHourChange={handleHourChange}
+                    onMinuteChange={handleMinuteChange}
+                    onPeriodChange={handlePeriodChange}
+                  />
               </div>
             </div>
             
