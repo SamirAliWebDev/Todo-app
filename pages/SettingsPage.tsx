@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { UserCircleIcon, PaletteIcon, StarIcon, ChevronRightIcon, ChevronLeftIcon, SunIcon, MoonIcon, SmallCheckIcon } from '../components/Icons';
+import { UserCircleIcon, PaletteIcon, StarIcon, BellIcon, ChevronRightIcon, ChevronLeftIcon, SunIcon, MoonIcon, SmallCheckIcon } from '../components/Icons';
 import type { Theme } from '../types';
 
-type SettingsSection = 'main' | 'profile' | 'appearance' | 'plan';
+type SettingsSection = 'main' | 'profile' | 'appearance' | 'plan' | 'notifications';
 
 const settingsItems = [
   {
@@ -16,6 +16,12 @@ const settingsItems = [
     icon: <PaletteIcon />,
     label: 'Appearance',
     description: 'Customize the look and feel',
+  },
+   {
+    id: 'notifications',
+    icon: <BellIcon />,
+    label: 'Notifications',
+    description: 'Set up task reminders',
   },
   {
     id: 'plan',
@@ -118,6 +124,72 @@ const AppearanceSettings: React.FC<{ onBack: () => void; theme: Theme; setTheme:
       </div>
     </div>
   );
+};
+
+const NotificationSettings: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+    const [permission, setPermission] = useState(Notification.permission);
+  
+    const requestPermission = async () => {
+        if (typeof Notification !== 'undefined') {
+            const result = await Notification.requestPermission();
+            setPermission(result);
+        }
+    };
+  
+    const renderStatus = () => {
+      switch (permission) {
+        case 'granted':
+          return (
+            <div className="text-center p-6 bg-green-500/10 border border-green-500/20 rounded-lg">
+              <p className="font-semibold text-green-600 dark:text-green-400">Notifications are enabled.</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">You will receive reminders for your tasks.</p>
+            </div>
+          );
+        case 'denied':
+          return (
+            <div className="text-center p-6 bg-red-500/10 border border-red-500/20 rounded-lg">
+              <p className="font-semibold text-red-600 dark:text-red-400">Notifications are blocked.</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                To enable them, you'll need to go to your browser's site settings for this page.
+              </p>
+            </div>
+          );
+        default:
+          return (
+            <div className="text-center p-6 bg-slate-200 dark:bg-slate-700/50 rounded-lg">
+              <p className="font-semibold text-slate-800 dark:text-slate-200">Notifications are not yet enabled.</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">Click the button below to allow reminders.</p>
+              <button
+                onClick={requestPermission}
+                className="mt-4 w-full bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-lg shadow-cyan-500/30"
+              >
+                Enable Notifications
+              </button>
+            </div>
+          );
+      }
+    };
+  
+    return (
+      <div className="content-fade-in-active">
+        <header className="p-6 flex items-center">
+          <button onClick={onBack} className="p-2 -ml-2 mr-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" aria-label="Go back">
+            <ChevronLeftIcon />
+          </button>
+          <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white">Notifications</h1>
+        </header>
+        <div className="p-6 pt-0">
+          {typeof Notification === 'undefined' ? (
+             <div className="text-center p-6 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+                <p className="font-semibold text-yellow-600 dark:text-yellow-400">Notifications not supported.</p>
+                <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                    Your browser does not support notifications, or you are in an insecure context (not HTTPS).
+                </p>
+            </div>
+          ) : renderStatus()}
+        </div>
+      </div>
+    );
 };
 
 const plans = [
@@ -275,6 +347,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ theme, setTheme }) => {
             return <ProfileSettings onBack={() => setActiveSection('main')} />;
         case 'appearance':
             return <AppearanceSettings onBack={() => setActiveSection('main')} theme={theme} setTheme={setTheme} />;
+        case 'notifications':
+            return <NotificationSettings onBack={() => setActiveSection('main')} />;
         case 'plan':
             return <PlanSettings onBack={() => setActiveSection('main')} hasPlan={hasPlan} />;
         default:

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import type { Page, Task, GraphConfig, Theme, TaskCategory, PredefinedCategory } from './types';
 import BottomNav from './components/BottomNav';
 import HomePage from './pages/HomePage';
@@ -85,6 +85,53 @@ const App: React.FC = () => {
     const savedTheme = localStorage.getItem('theme');
     return (savedTheme === 'light' || savedTheme === 'dark') ? savedTheme : 'dark';
   });
+
+  const tasksRef = useRef(tasks);
+  useEffect(() => {
+    tasksRef.current = tasks;
+  }, [tasks]);
+
+  const notificationTimeouts = useRef<Record<string, number>>({});
+
+  useEffect(() => {
+    // Clear all previously scheduled notifications on any task change
+    Object.values(notificationTimeouts.current).forEach(clearTimeout);
+    notificationTimeouts.current = {};
+
+    // Only schedule new notifications if permission has been granted
+    if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+      tasks.forEach(task => {
+        // Schedule for tasks that have a reminder, are not completed, and are in the future
+        if (task.reminderTime && !task.completed) {
+          const [hours, minutes] = task.reminderTime.split(':').map(Number);
+          const reminderDateTime = new Date(task.date);
+          reminderDateTime.setHours(hours, minutes, 0, 0);
+
+          const now = new Date();
+          if (reminderDateTime > now) {
+            const timeoutDuration = reminderDateTime.getTime() - now.getTime();
+            const timeoutId = window.setTimeout(() => {
+              // Using a ref to get the latest task state to ensure we don't notify for tasks completed while waiting for the timeout
+              const currentTask = tasksRef.current.find(t => t.id === task.id);
+              if (currentTask && !currentTask.completed) {
+                  new Notification('Zenith: Task Reminder', {
+                    body: task.title,
+                    icon: '/vite.svg', // Using the vite icon from index.html
+                  });
+              }
+              delete notificationTimeouts.current[task.id];
+            }, timeoutDuration);
+            notificationTimeouts.current[task.id] = timeoutId;
+          }
+        }
+      });
+    }
+
+    // Cleanup function to clear timeouts when the component unmounts
+    return () => {
+      Object.values(notificationTimeouts.current).forEach(clearTimeout);
+    };
+  }, [tasks]);
 
   useEffect(() => {
     if (theme === 'dark') {

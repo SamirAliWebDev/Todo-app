@@ -20,6 +20,7 @@ export interface Task {
   completed: boolean;
   date: Date;
   category: TaskCategory;
+  reminderTime?: string; // e.g., "14:30"
 }
 
 export type GraphOption = 'Completion' | 'Priority' | 'PerDay' | 'Streak';
