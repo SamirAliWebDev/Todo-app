@@ -31,7 +31,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ activePage, onNavigate }) => {
   const isAddPage = activePage === 'Add';
   
   return (
-    <nav className="sticky bottom-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg border-t border-slate-200 dark:border-slate-700 p-2">
+    <nav className="sticky bottom-0 bg-white/95 dark:bg-slate-900/95 border-t border-slate-200 dark:border-slate-700 p-2">
       <div className="flex justify-around items-center h-16">
         <NavItem page="Home" activePage={activePage} onClick={onNavigate} label="Home">
           <HomeIcon />

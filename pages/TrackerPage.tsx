@@ -135,7 +135,7 @@ const GraphDisplay: React.FC<{
   };
 
   return (
-    <div className="w-full bg-white/50 dark:bg-slate-800/40 backdrop-blur-md rounded-2xl p-6 border border-slate-200 dark:border-white/10 shadow-xl shadow-black/25 content-fade-in-active">
+    <div className="w-full bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-white/10 shadow-xl shadow-black/25 content-fade-in-active">
         <div className="flex justify-between items-center mb-4">
             <h3 className="text-xl font-bold text-slate-900 dark:text-white">{analysisTitle}</h3>
             <button 
@@ -269,7 +269,7 @@ const TrackerPage: React.FC<TrackerPageProps> = ({ tasks, generatedGraphs, onGen
         </header>
 
         <div className="w-full max-w-md mx-auto">
-            <div className="w-full bg-white/50 dark:bg-slate-800/40 backdrop-blur-md rounded-2xl p-8 border border-slate-200 dark:border-white/10 shadow-xl shadow-black/25 content-fade-in-active">
+            <div className="w-full bg-white dark:bg-slate-800 rounded-2xl p-8 border border-slate-200 dark:border-white/10 shadow-xl shadow-black/25 content-fade-in-active">
                 <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Productivity Insights</h2>
                 <p className="text-slate-600 dark:text-slate-300 mt-3 mb-6">
                     Generate up to 4 graphs to visualize your task trends and track your progress.

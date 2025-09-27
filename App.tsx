@@ -86,6 +86,8 @@ const App: React.FC = () => {
     return (savedTheme === 'light' || savedTheme === 'dark') ? savedTheme : 'dark';
   });
 
+  const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
+
   const tasksRef = useRef(tasks);
   useEffect(() => {
     tasksRef.current = tasks;
@@ -175,6 +177,10 @@ const App: React.FC = () => {
 
   const onNavigate = (page: Page) => {
     if (page === activePage || isTransitioning) return;
+    
+    if (activePage === 'Add') {
+      setTaskToEdit(null);
+    }
 
     setIsTransitioning(true);
     setAnimationClass(getExitAnimationClass(activePage));
@@ -204,6 +210,21 @@ const App: React.FC = () => {
     setTasks(prevTasks => [...prevTasks, newTask].sort((a, b) => Number(a.id) - Number(b.id)));
   };
 
+  const handleUpdateTask = (updatedTask: Task) => {
+    setTasks(prevTasks =>
+      prevTasks.map(task => (task.id === updatedTask.id ? updatedTask : task))
+    );
+    setTaskToEdit(null);
+  };
+
+  const handleStartEditTask = (taskId: string) => {
+    const task = tasks.find(t => t.id === taskId);
+    if (task) {
+      setTaskToEdit(task);
+      onNavigate('Add');
+    }
+  };
+
   const handleToggleTask = (taskId: string) => {
     setTasks(prevTasks =>
       prevTasks.map(task =>
@@ -221,9 +242,9 @@ const App: React.FC = () => {
       case 'Home':
         return <HomePage tasks={tasks} />;
       case 'Tasks':
-        return <TasksPage tasks={tasks} onToggleTask={handleToggleTask} onDeleteTask={handleDeleteTask} selectedDate={selectedDate} onDateSelect={setSelectedDate} />;
+        return <TasksPage tasks={tasks} onToggleTask={handleToggleTask} onDeleteTask={handleDeleteTask} onEditTask={handleStartEditTask} selectedDate={selectedDate} onDateSelect={setSelectedDate} />;
       case 'Add':
-        return <AddOrEditTaskPage onNavigate={onNavigate} onAddTask={handleAddTask} selectedDate={selectedDate} />;
+        return <AddOrEditTaskPage onNavigate={onNavigate} onAddTask={handleAddTask} onUpdateTask={handleUpdateTask} selectedDate={selectedDate} taskToEdit={taskToEdit} />;
       case 'Tracker':
         return <TrackerPage tasks={tasks} generatedGraphs={generatedGraphs} onGenerateGraph={handleGenerateGraph} onDeleteGraph={handleDeleteGraph} />;
       case 'Settings':

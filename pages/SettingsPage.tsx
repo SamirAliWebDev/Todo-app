@@ -62,7 +62,7 @@ const ProfileSettings: React.FC<{ onBack: () => void }> = ({ onBack }) => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="your.email@example.com"
-              className="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800/40 text-slate-900 dark:text-white backdrop-blur-sm border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 transition placeholder:text-slate-500 dark:placeholder:text-slate-400"
+              className="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 transition placeholder:text-slate-500 dark:placeholder:text-slate-400"
             />
           </div>
           <div>
@@ -75,7 +75,7 @@ const ProfileSettings: React.FC<{ onBack: () => void }> = ({ onBack }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter a new password"
-              className="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800/40 text-slate-900 dark:text-white backdrop-blur-sm border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 transition placeholder:text-slate-500 dark:placeholder:text-slate-400"
+              className="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 transition placeholder:text-slate-500 dark:placeholder:text-slate-400"
             />
           </div>
           <div className="pt-2">
@@ -223,7 +223,7 @@ const PlanCard: React.FC<{
     const isPro = plan.id === 'pro';
     const cardClasses = isCurrent
         ? `bg-gradient-to-br from-cyan-500 to-cyan-700 text-white shadow-xl shadow-cyan-500/30`
-        : `bg-white/50 dark:bg-slate-800/40 backdrop-blur-md text-slate-900 dark:text-white border border-slate-200 dark:border-white/10 shadow-lg shadow-black/20`;
+        : `bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-white/10 shadow-lg shadow-black/20`;
 
     const buttonClasses = isCurrent
         ? `w-full mt-8 bg-white text-cyan-600 font-bold py-3 px-4 rounded-lg transition-colors cursor-default`
@@ -313,7 +313,7 @@ const PlanSettings: React.FC<{ onBack: () => void; hasPlan: boolean }> = ({ onBa
                     </button>
                 </div>
             ) : (
-                <div className="bg-white/50 dark:bg-slate-800/40 backdrop-blur-md rounded-2xl p-6 text-center border border-slate-200 dark:border-white/10 shadow-lg shadow-black/20">
+                <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 text-center border border-slate-200 dark:border-white/10 shadow-lg shadow-black/20">
                     <StarIcon className="h-12 w-12 text-slate-400 dark:text-slate-500 mx-auto" />
                     <h3 className="text-xl font-bold text-slate-900 dark:text-white mt-4">No Active Plan</h3>
                     <p className="mt-2 text-slate-500 dark:text-slate-400">
@@ -359,7 +359,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ theme, setTheme }) => {
                         <p className="text-slate-500 dark:text-slate-400 mt-1">Manage your account and preferences.</p>
                     </header>
                     <div className="p-6 pt-0">
-                        <div className="bg-white/50 dark:bg-slate-800/40 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-white/10 shadow-xl shadow-black/25 overflow-hidden">
+                        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-white/10 shadow-xl shadow-black/25 overflow-hidden">
                             <ul className="divide-y divide-slate-200 dark:divide-slate-700/50">
                                 {settingsItems.map((item) => (
                                 <li key={item.label}>

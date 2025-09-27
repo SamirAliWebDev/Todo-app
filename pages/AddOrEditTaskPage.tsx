@@ -224,10 +224,13 @@ const PriorityButton: React.FC<{
 interface AddOrEditTaskPageProps {
   onNavigate: (page: Page) => void;
   onAddTask: (task: Omit<Task, 'id' | 'completed'>) => void;
+  onUpdateTask: (task: Task) => void;
   selectedDate: Date;
+  taskToEdit?: Task | null;
 }
 
-const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAddTask, selectedDate }) => {
+const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAddTask, onUpdateTask, selectedDate, taskToEdit }) => {
+  const isEditing = !!taskToEdit;
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState<Priority>('Medium');
@@ -240,6 +243,17 @@ const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAdd
   const [minute, setMinute] = useState('00');
   const [period, setPeriod] = useState<'AM' | 'PM'>('AM');
   
+  // Populate form when taskToEdit changes
+  useEffect(() => {
+    if (isEditing && taskToEdit) {
+      setTitle(taskToEdit.title);
+      setDescription(taskToEdit.description || '');
+      setPriority(taskToEdit.priority);
+      setCategory(taskToEdit.category);
+      setReminderTime(taskToEdit.reminderTime || '');
+    }
+  }, [taskToEdit, isEditing]);
+
   // Sync from the main reminderTime string to the picker's state.
   // This is needed for presets and clearing the time.
   useEffect(() => {
@@ -277,9 +291,19 @@ const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAdd
         return;
     }
     
-    const selectedTaskDate = selectedDate;
-
-    onAddTask({ title, description, priority, date: selectedTaskDate, category, reminderTime: reminderTime || undefined });
+    if (isEditing && taskToEdit) {
+      onUpdateTask({
+        ...taskToEdit,
+        title,
+        description,
+        priority,
+        category,
+        reminderTime: reminderTime || undefined,
+      });
+    } else {
+      const selectedTaskDate = selectedDate;
+      onAddTask({ title, description, priority, date: selectedTaskDate, category, reminderTime: reminderTime || undefined });
+    }
     onNavigate('Tasks');
   };
 
@@ -293,7 +317,7 @@ const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAdd
     <>
       <div className="flex flex-col h-full">
         <header className="p-6 flex items-center justify-between flex-shrink-0">
-          <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white">Add New Task</h1>
+          <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white">{isEditing ? 'Edit Task' : 'Add New Task'}</h1>
           <button 
               onClick={() => onNavigate('Home')} 
               className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors p-2 -mr-2"
@@ -319,7 +343,7 @@ const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAdd
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="e.g., Finish project report"
-                    className="w-full pl-12 pr-4 py-3 bg-slate-100 dark:bg-slate-800/40 text-slate-900 dark:text-white backdrop-blur-sm border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 transition placeholder:text-slate-500 dark:placeholder:text-slate-400"
+                    className="w-full pl-12 pr-4 py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 transition placeholder:text-slate-500 dark:placeholder:text-slate-400"
                     required
                 />
               </div>
@@ -335,7 +359,7 @@ const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAdd
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Add more details about your task..."
-                className="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800/40 text-slate-900 dark:text-white backdrop-blur-sm border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 transition placeholder:text-slate-500 dark:placeholder:text-slate-400"
+                className="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 transition placeholder:text-slate-500 dark:placeholder:text-slate-400"
               ></textarea>
             </div>
             
@@ -346,7 +370,7 @@ const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAdd
               <button
                   type="button"
                   onClick={() => setIsCategoryModalOpen(true)}
-                  className="w-full flex items-center justify-between text-left px-4 py-3 bg-slate-100 dark:bg-slate-800/40 text-slate-900 dark:text-white backdrop-blur-sm border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 transition"
+                  className="w-full flex items-center justify-between text-left px-4 py-3 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-cyan-500 focus:border-cyan-500 transition"
               >
                   <div className="flex items-center">
                       <CategoryDisplay category={category} className="w-6 h-6 mr-3" />
@@ -401,7 +425,7 @@ const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAdd
                                   className={`p-3 rounded-lg border-2 flex flex-col items-center justify-center text-sm font-semibold transition-all duration-200 h-20 ${
                                       isActive
                                           ? 'bg-cyan-500/20 border-cyan-500 text-cyan-600 dark:text-cyan-400'
-                                          : 'bg-slate-100 dark:bg-slate-800/40 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-500'
+                                          : 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-500'
                                   }`}
                               >
                                   {React.cloneElement(icon, { className: 'h-6 w-6 mb-1' })}
@@ -426,7 +450,7 @@ const AddOrEditTaskPage: React.FC<AddOrEditTaskPageProps> = ({ onNavigate, onAdd
                 type="submit"
                 className="w-full bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-4 px-4 rounded-lg transition-colors shadow-lg shadow-cyan-500/30"
               >
-                Create Task
+                {isEditing ? 'Save Changes' : 'Create Task'}
               </button>
             </div>
           </form>

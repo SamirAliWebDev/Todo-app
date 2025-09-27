@@ -11,7 +11,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ title, subtitle, onBack, onClose, children }) => {
   return (
-    <header className="bg-white/50 dark:bg-slate-800/40 backdrop-blur-md rounded-b-2xl px-4 pt-6 pb-4 border-b border-slate-200 dark:border-white/10 shadow-lg shadow-black/20">
+    <header className="bg-white/90 dark:bg-slate-800/90 rounded-b-2xl px-4 pt-6 pb-4 border-b border-slate-200 dark:border-white/10 shadow-lg shadow-black/20">
       <div className="flex items-center justify-between">
         
         <div className="flex items-center flex-1 min-w-0">

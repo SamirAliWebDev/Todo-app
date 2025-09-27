@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import type { Task } from '../types';
+import type { Task, Priority } from '../types';
 import TaskItem from '../components/TaskItem';
 import Header from '../components/Header';
 
@@ -43,7 +43,7 @@ const DateCarousel: React.FC<DateCarouselProps> = ({ selectedDate, onDateSelect 
                             date-item-animate
                             ${isSelected
                                 ? 'bg-cyan-500 text-white shadow-lg shadow-cyan-500/30'
-                                : 'bg-slate-200 dark:bg-slate-800/40 backdrop-blur-md hover:bg-slate-300/80 dark:hover:bg-slate-700/60 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-white/10 shadow-md shadow-black/20'
+                                : 'bg-slate-200/80 dark:bg-slate-800/60 hover:bg-slate-300/80 dark:hover:bg-slate-700/60 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-white/10 shadow-md shadow-black/20'
                             }
                         `}
                         style={{ animationDelay: `${index * 50}ms` }}
@@ -61,14 +61,35 @@ interface TasksPageProps {
     tasks: Task[];
     onToggleTask: (taskId: string) => void;
     onDeleteTask: (taskId: string) => void;
+    onEditTask: (taskId: string) => void;
     selectedDate: Date;
     onDateSelect: (date: Date) => void;
 }
 
-const TasksPage: React.FC<TasksPageProps> = ({ tasks, onToggleTask, onDeleteTask, selectedDate, onDateSelect }) => {
+const TasksPage: React.FC<TasksPageProps> = ({ tasks, onToggleTask, onDeleteTask, onEditTask, selectedDate, onDateSelect }) => {
 
     const filteredTasks = useMemo(() => {
-        return tasks.filter(task => isSameDay(task.date, selectedDate));
+        const priorityOrder: Record<Priority, number> = {
+            'High': 1,
+            'Medium': 2,
+            'Low': 3,
+        };
+
+        return tasks
+            .filter(task => isSameDay(task.date, selectedDate))
+            .sort((a, b) => {
+                // 1. Sort by completion status (incomplete tasks first)
+                if (a.completed !== b.completed) {
+                    return a.completed ? 1 : -1;
+                }
+                // 2. Sort by priority (High > Medium > Low)
+                const priorityComparison = priorityOrder[a.priority] - priorityOrder[b.priority];
+                if (priorityComparison !== 0) {
+                    return priorityComparison;
+                }
+                // 3. Sort by creation time (older tasks first)
+                return Number(a.id) - Number(b.id);
+            });
     }, [tasks, selectedDate]);
     
     const isTodaySelected = useMemo(() => {
@@ -128,6 +149,7 @@ const TasksPage: React.FC<TasksPageProps> = ({ tasks, onToggleTask, onDeleteTask
                                     task={task} 
                                     onToggle={onToggleTask} 
                                     onDelete={onDeleteTask}
+                                    onEdit={onEditTask}
                                     index={index}
                                 />
                             ))}

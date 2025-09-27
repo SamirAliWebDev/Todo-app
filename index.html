@@ -29,6 +29,7 @@
       .page-enter-active {
         animation: page-enter 0.3s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
         will-change: opacity; /* Performance boost */
+        transform: translateZ(0); /* Force hardware acceleration */
       }
 
       /* Generic Exit Animation (Fade Out) - FASTER */
@@ -39,6 +40,7 @@
       .page-exit-active {
         animation: page-exit 0.15s cubic-bezier(0.470, 0.000, 0.745, 0.715) both;
         will-change: opacity; /* Performance boost */
+        transform: translateZ(0); /* Force hardware acceleration */
       }
 
       /* Circular Wipe Keyframes for Home Icon */
@@ -101,8 +103,8 @@
 
       /* Slide Up/Down Keyframes for Add Page */
       @keyframes slide-in-up {
-        from { transform: translateY(100%); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
+        from { transform: translateY(100%) translateZ(0); opacity: 0; }
+        to { transform: translateY(0) translateZ(0); opacity: 1; }
       }
       .page-add-enter-active {
         animation: slide-in-up 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
@@ -110,8 +112,8 @@
       }
 
       @keyframes slide-out-down {
-        from { transform: translateY(0); opacity: 1; }
-        to { transform: translateY(100%); opacity: 0; }
+        from { transform: translateY(0) translateZ(0); opacity: 1; }
+        to { transform: translateY(100%) translateZ(0); opacity: 0; }
       }
       .page-add-exit-active {
         animation: slide-out-down 0.3s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
@@ -146,25 +148,24 @@
         will-change: transform, opacity; /* Performance boost */
       }
 
-      /* Animation for task item deletion */
+      /* Animation for task item deletion - More performant version */
       @keyframes fade-out-shrink {
         from {
           opacity: 1;
-          transform: scaleY(1);
-          max-height: 100px; /* Should be larger than any task item */
+          transform: scale(1);
         }
         to {
           opacity: 0;
-          transform: scaleY(0);
-          max-height: 0;
-          padding-top: 0;
-          padding-bottom: 0;
-          margin-bottom: -1.5rem; /* Compensate for parent's space-y-6 to pull next item up */
+          transform: scale(0.95);
         }
       }
       .task-item-exit-active {
-        transform-origin: top;
-        animation: fade-out-shrink 0.3s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
+        animation: fade-out-shrink 0.2s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
+        /* Transition for collapsing the space starts after a small delay */
+        transition: max-height 0.25s 0.05s ease-in, margin-bottom 0.25s 0.05s ease-in;
+        transform-origin: center;
+        max-height: 0;
+        margin-bottom: -1.5rem; /* Compensate for parent's space-y-6 to pull next item up */
         overflow: hidden;
         /* Performance Boost: Hint to browser to optimize known expensive animations */
         will-change: transform, opacity, max-height;
